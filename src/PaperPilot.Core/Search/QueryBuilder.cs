@@ -38,6 +38,7 @@ public static class QueryBuilder
     /// <summary>
     /// A hybrid search: the BM25 query and a k-NN query over <paramref name="embedding"/>, each asked for
     /// <c>Size × multiplier</c> hits, fused by the RRF search pipeline. Ignores <c>From</c> and <c>LatestPapers</c>.
+    /// The category filter applies to both arms; Python's k-NN arm ignored it (B30).
     /// </summary>
     public static JsonObject BuildHybrid(SearchQuery query, IReadOnlyList<float> embedding, int multiplier)
     {
@@ -54,23 +55,22 @@ public static class QueryBuilder
             vector.Add(value);
         }
 
+        var knn = new JsonObject
+        {
+            ["knn"] = new JsonObject { ["embedding"] = new JsonObject { ["vector"] = vector, ["k"] = candidates } },
+        };
+        if (CategoryFilter(query.Categories) is { } filter)
+        {
+            // The index uses the nmslib engine, which can't filter inside a k-NN query, so the k candidates are filtered.
+            knn = new JsonObject { ["bool"] = new JsonObject { ["must"] = new JsonArray(knn), ["filter"] = filter } };
+        }
+
         return new JsonObject
         {
             ["size"] = query.Size,
             ["query"] = new JsonObject
             {
-                ["hybrid"] = new JsonObject
-                {
-                    ["queries"] = new JsonArray(
-                        bm25["query"]!.DeepClone(),
-                        new JsonObject
-                        {
-                            ["knn"] = new JsonObject
-                            {
-                                ["embedding"] = new JsonObject { ["vector"] = vector, ["k"] = candidates },
-                            },
-                        }),
-                },
+                ["hybrid"] = new JsonObject { ["queries"] = new JsonArray(bm25["query"]!.DeepClone(), knn) },
             },
             ["_source"] = bm25["_source"]!.DeepClone(),
             ["highlight"] = bm25["highlight"]!.DeepClone(),
@@ -95,16 +95,22 @@ public static class QueryBuilder
             });
 
         var boolQuery = new JsonObject { ["must"] = must };
-        if (query.Categories is { Count: > 0 } categories)
+        if (CategoryFilter(query.Categories) is { } filter)
         {
-            boolQuery["filter"] = new JsonArray(new JsonObject
-            {
-                ["terms"] = new JsonObject { ["categories"] = new JsonArray([.. categories.Select(c => (JsonNode)c)]) },
-            });
+            boolQuery["filter"] = filter;
         }
 
         return new JsonObject { ["bool"] = boolQuery };
     }
+
+    /// <summary><c>[{"terms": {"categories": [...]}}]</c>, or null when there are no categories.</summary>
+    private static JsonArray? CategoryFilter(IReadOnlyList<string>? categories) =>
+        categories is { Count: > 0 }
+            ? new JsonArray(new JsonObject
+            {
+                ["terms"] = new JsonObject { ["categories"] = new JsonArray([.. categories.Select(c => (JsonNode)c)]) },
+            })
+            : null;
 
     private static JsonObject BuildHighlight()
     {

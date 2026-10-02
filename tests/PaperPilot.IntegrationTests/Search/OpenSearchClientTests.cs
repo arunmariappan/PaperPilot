@@ -76,6 +76,19 @@ public sealed class OpenSearchClientTests(OpenSearchFixture search) : IAsyncLife
     }
 
     [Fact]
+    public async Task Hybrid_search_keeps_other_categories_out_of_both_arms() // B30
+    {
+        await search.Client.BulkIndexChunksAsync(SampleChunks.All, Ct);
+
+        // The query text matches nothing, so any hit would come from the k-NN arm.
+        var result = await search.Client.SearchAsync(
+            new SearchQuery("zzzz", Size: 3, Categories: ["cs.CL"]), SampleChunks.Reward.Embedding, Ct);
+
+        result.Hits.Select(h => h.ArxivId).ShouldAllBe(id => id == "2610.00001v1");
+        result.Hits.Count.ShouldBe(2);
+    }
+
+    [Fact]
     public async Task Reindexing_the_same_chunks_does_not_duplicate_them() // C5
     {
         await search.Client.BulkIndexChunksAsync(SampleChunks.All, Ct);

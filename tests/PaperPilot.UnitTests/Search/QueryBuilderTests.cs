@@ -47,7 +47,22 @@ public sealed class QueryBuilderTests
             embedding,
             multiplier: 2);
 
-        JsonAssert.Equivalent(testCase["expected"]!["body"], body);
+        var expected = testCase["expected"]!["body"]!.DeepClone();
+        if (Categories(input["categories"]) is { Length: > 0 })
+        {
+            // B30: Python left the k-NN arm unfiltered; PaperPilot wraps it in the BM25 arm's category filter.
+            var queries = expected["query"]!["hybrid"]!["queries"]!.AsArray();
+            queries[1] = new JsonObject
+            {
+                ["bool"] = new JsonObject
+                {
+                    ["must"] = new JsonArray(queries[1]!.DeepClone()),
+                    ["filter"] = queries[0]!["bool"]!["filter"]!.DeepClone(),
+                },
+            };
+        }
+
+        JsonAssert.Equivalent(expected, body);
         testCase["expected"]!["params"]!["search_pipeline"]!.GetValue<string>().ShouldBe("hybrid-rrf-pipeline");
     }
 
