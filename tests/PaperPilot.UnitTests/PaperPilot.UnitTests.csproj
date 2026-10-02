@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/PaperPilot.Core/PaperPilot.Core.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/PaperPilot.Ingestion/PaperPilot.Ingestion.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Rag/PaperPilot.Rag.csproj" />
     <ProjectReference Include="../../src/PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
   </ItemGroup>

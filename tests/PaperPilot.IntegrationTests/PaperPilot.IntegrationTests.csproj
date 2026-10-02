@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/**/*.xml;../fixtures/**/*.pdf;../fixtures/**/*.json" LinkBase="fixtures" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="PdfPig" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="Testcontainers.Redis" />
@@ -29,6 +31,7 @@
     <ProjectReference Include="../../src/PaperPilot.Api/PaperPilot.Api.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Core/PaperPilot.Core.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/PaperPilot.Ingestion/PaperPilot.Ingestion.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Rag/PaperPilot.Rag.csproj" />
   </ItemGroup>
 
