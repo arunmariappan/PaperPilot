@@ -69,3 +69,6 @@ coverage/
 
 # Local data (PDF cache, scratch output)
 data/
+
+# Cached arXiv PDFs when a service runs outside the AppHost (Arxiv:PdfCacheDir defaults to ./data/arxiv_pdfs)
+data/

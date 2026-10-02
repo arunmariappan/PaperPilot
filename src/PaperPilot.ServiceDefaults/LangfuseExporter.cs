@@ -14,8 +14,11 @@ namespace Microsoft.Extensions.Hosting;
 /// </summary>
 public static class LangfuseExporter
 {
-    /// <summary>The activity sources whose spans go to Langfuse: RAG, LLM and agent spans.</summary>
-    public static IReadOnlyList<string> Sources { get; } = ["PaperPilot.*", "Microsoft.Agents.AI*"];
+    /// <summary>
+    /// The activity sources whose spans go to Langfuse: RAG, LLM and agent spans. Ingestion spans
+    /// (<c>PaperPilot.Ingestion</c>) stay in the Aspire dashboard; Langfuse is for the question-answering side.
+    /// </summary>
+    public static IReadOnlyList<string> Sources { get; } = ["PaperPilot.Rag*", "PaperPilot.Llm*", "Microsoft.Agents.AI*"];
 
     public static TBuilder AddLangfuseExporter<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {

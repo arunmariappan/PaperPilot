@@ -17,6 +17,7 @@ public sealed class LangfuseExporterTests : IDisposable
     private readonly ActivitySource _paperPilot = new("PaperPilot.Rag.ExporterTests");
     private readonly ActivitySource _agent = new("Microsoft.Agents.AI.Workflows.ExporterTests");
     private readonly ActivitySource _aspNetCore = new("Microsoft.AspNetCore.ExporterTests");
+    private readonly ActivitySource _ingestion = new("PaperPilot.Ingestion.ExporterTests");
     private readonly CapturingProcessor _mainPipeline = new();
 
     private Dictionary<string, string?> Enabled => new()
@@ -28,7 +29,7 @@ public sealed class LangfuseExporterTests : IDisposable
     };
 
     [Fact]
-    public async Task Only_paperpilot_and_agent_spans_are_posted_to_langfuse()
+    public async Task Only_rag_llm_and_agent_spans_are_posted_to_langfuse()
     {
         _langfuse.Given(Request.Create().WithPath("/api/public/otel/v1/traces").UsingPost()).RespondWith(Response.Create());
         using var host = Host(Enabled);
@@ -45,6 +46,7 @@ public sealed class LangfuseExporterTests : IDisposable
         payload.ShouldContain("paperpilot-span");
         payload.ShouldContain("agent-span");
         payload.ShouldNotContain("aspnet-span");
+        payload.ShouldNotContain("ingestion-span");
     }
 
     [Fact]
@@ -57,7 +59,7 @@ public sealed class LangfuseExporterTests : IDisposable
 
         EmitSpans();
 
-        _mainPipeline.Ended.ShouldBe(["agent-span", "paperpilot-span", "aspnet-span"], ignoreOrder: true);
+        _mainPipeline.Ended.ShouldBe(["ingestion-span", "agent-span", "paperpilot-span", "aspnet-span"], ignoreOrder: true);
     }
 
     [Theory]
@@ -81,6 +83,7 @@ public sealed class LangfuseExporterTests : IDisposable
     {
         _paperPilot.Dispose();
         _agent.Dispose();
+        _ingestion.Dispose();
         _aspNetCore.Dispose();
         _langfuse.Dispose();
     }
@@ -90,6 +93,7 @@ public sealed class LangfuseExporterTests : IDisposable
         using (_aspNetCore.StartActivity("aspnet-span"))
         using (_paperPilot.StartActivity("paperpilot-span"))
         using (_agent.StartActivity("agent-span"))
+        using (_ingestion.StartActivity("ingestion-span"))
         {
         }
     }
@@ -109,7 +113,7 @@ public sealed class LangfuseExporterTests : IDisposable
         var builder = Microsoft.Extensions.Hosting.Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings());
         builder.Configuration.AddInMemoryCollection(settings);
         builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing
-            .AddSource(_paperPilot.Name, _agent.Name, _aspNetCore.Name)
+            .AddSource(_paperPilot.Name, _agent.Name, _aspNetCore.Name, _ingestion.Name)
             .AddProcessor(_mainPipeline));
         builder.AddLangfuseExporter();
         return builder.Build();

@@ -67,6 +67,9 @@ var api = builder.AddProject<Projects.PaperPilot_Api>("api")
 var worker = builder.AddProject<Projects.PaperPilot_Worker>("worker")
     .WithReference(papersDb)
     .WithEnvironment("OpenSearch__Host", opensearch.GetEndpoint("http"))
+    // Outside the repository; PDFs older than 30 days are deleted after each run.
+    .WithEnvironment("Arxiv__PdfCacheDir", Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PaperPilot", "arxiv_pdfs"))
     .WithEnvironment("Docling__BaseUrl", docling.GetEndpoint("http"))
     .WithEnvironment("Jina__ApiKey", jinaKey)
     .WithHttpHealthCheck("/health")
