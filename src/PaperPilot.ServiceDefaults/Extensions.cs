@@ -63,11 +63,15 @@ public static class Extensions
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                    .AddRuntimeInstrumentation()
+                    // GenAI metrics from the chat client (PaperPilot.Llm): token usage and call durations.
+                    .AddMeter("PaperPilot.*");
             })
             .WithTracing(tracing =>
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
+                    // PaperPilot's own spans: PaperPilot.Rag (pipeline steps) and PaperPilot.Llm (chat client).
+                    .AddSource("PaperPilot.*")
                     .AddAspNetCoreInstrumentation(tracing =>
                         // Exclude health check requests from tracing
                         tracing.Filter = context =>
@@ -80,6 +84,7 @@ public static class Extensions
             });
 
         builder.AddOpenTelemetryExporters();
+        builder.AddLangfuseExporter();
 
         return builder;
     }
