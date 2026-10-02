@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <!-- Each phase adds the packages it needs (docs/plan/README.md §4). -->
+  <ItemGroup>
+  </ItemGroup>
+</Project>

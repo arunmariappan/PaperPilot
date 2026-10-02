@@ -55,3 +55,17 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# IDEs
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Coverage
+coverage/
+*.cobertura.xml
+
+# Local data (PDF cache, scratch output)
+data/

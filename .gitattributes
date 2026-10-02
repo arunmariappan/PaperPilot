@@ -1,0 +1,8 @@
+# LF everywhere, so `dotnet format --verify-no-changes` gives the same result on
+# Windows (core.autocrlf=true) and on the Linux CI runner.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
+*.ico binary
