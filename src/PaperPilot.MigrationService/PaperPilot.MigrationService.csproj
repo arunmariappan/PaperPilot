@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Startup project for `dotnet ef`; the migrations live in PaperPilot.Infrastructure. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
     <ProjectReference Include="../PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
   </ItemGroup>
