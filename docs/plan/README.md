@@ -148,7 +148,7 @@ Pin every version in `Directory.Packages.props` and use the latest stable releas
 | HTTP resilience | `Microsoft.Extensions.Http.Resilience` | hand-rolled retry loops |
 | Rate limiting | `System.Threading.RateLimiting` (in the BCL) | `asyncio.sleep` |
 | PDF validation | `UglyToad.PdfPig` | pypdfium2 |
-| PDF parsing | **docling-serve** container (`ghcr.io/docling-project/docling-serve`, pinned tag) | docling |
+| PDF parsing | **docling-serve** container (`ghcr.io/docling-project/docling-serve-cpu:v1.35.0`) | docling |
 | Scheduling | `Hangfire.Core`, `Hangfire.AspNetCore`, `Hangfire.PostgreSql` | Airflow 2.10 |
 | Telemetry | `OpenTelemetry.Extensions.Hosting`, `OpenTelemetry.Exporter.OpenTelemetryProtocol`, ASP.NET/HTTP instrumentation (from ServiceDefaults) | langfuse SDK v3 |
 | Telegram | `Telegram.Bot` | python-telegram-bot |

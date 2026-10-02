@@ -14,13 +14,13 @@
 ## Tasks
 
 ### 0.1 Repository
-- [ ] `D:\ai_workspace\PaperPilot` on top of the GitHub repo `arunmariappan/PaperPilot` (public, created with an Apache-2.0 `LICENSE`, the .NET `.gitignore` and a one-line `README.md`). Commit as `Arun Mariappan Karunanithi <2525449+arunmariappan@users.noreply.github.com>` (repo-local `git config`, as in the Python repo). All work is committed on `main` and pushed.
-- [ ] Move the `plan/` folder to `docs/plan/`, so the plan sits next to the code.
-- [ ] `CLAUDE.md` for the new repo: commands, architecture summary and gotchas. Start small and add to it as phases land.
+- [x] `D:\ai_workspace\PaperPilot` on top of the GitHub repo `arunmariappan/PaperPilot` (public, created with an Apache-2.0 `LICENSE`, the .NET `.gitignore` and a one-line `README.md`). Commit as `Arun Mariappan Karunanithi <2525449+arunmariappan@users.noreply.github.com>` (repo-local `git config`, as in the Python repo). All work is committed on `main` and pushed.
+- [x] Move the `plan/` folder to `docs/plan/`, so the plan sits next to the code.
+- [x] `CLAUDE.md` for the new repo: commands, architecture summary and gotchas. Start small and add to it as phases land.
 
 ### 0.2 Build configuration
-- [ ] `global.json`: pin SDK `10.0.x` with `"rollForward": "latestFeature"`.
-- [ ] `Directory.Build.props`:
+- [x] `global.json`: pin SDK `10.0.x` with `"rollForward": "latestFeature"`.
+- [x] `Directory.Build.props`:
   ```xml
   <Project>
     <PropertyGroup>
@@ -33,8 +33,8 @@
     </PropertyGroup>
   </Project>
   ```
-- [ ] `Directory.Packages.props` with `<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>`. Each phase adds the packages it needs (README §4).
-- [ ] `.editorconfig`: file-scoped namespaces, `var` where the type is obvious, 4-space indentation, 130 max line length (same as the Python ruff config).
+- [x] `Directory.Packages.props` with `<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>`. Each phase adds the packages it needs (README §4).
+- [x] `.editorconfig`: file-scoped namespaces, `var` where the type is obvious, 4-space indentation, 130 max line length (same as the Python ruff config).
 
 ### 0.3 Projects
 ```bash
@@ -54,8 +54,8 @@ dotnet new xunit3   -o tests/PaperPilot.UnitTests
 dotnet new xunit3   -o tests/PaperPilot.IntegrationTests
 dotnet sln add (all of the above)
 ```
-- [ ] Add project references in the direction shown in README §2. Add `ServiceDefaults` to every host and call `builder.AddServiceDefaults()` / `app.MapDefaultEndpoints()`.
-- [ ] Pin HTTP ports in each host's `launchSettings.json`, so they're predictable and don't clash with the Python stack (8000, 5432, 6379, 9200, 5601, 3001, 8080):
+- [x] Add project references in the direction shown in README §2. Add `ServiceDefaults` to every host and call `builder.AddServiceDefaults()` / `app.MapDefaultEndpoints()`.
+- [x] Pin HTTP ports in each host's `launchSettings.json`, so they're predictable and don't clash with the Python stack (8000, 5432, 6379, 9200, 5601, 3001, 8080):
 
 | Resource | Host port |
 |---|---|
@@ -100,7 +100,7 @@ builder.AddContainer("opensearch-dashboards", "opensearchproject/opensearch-dash
     .WithEnvironment("DISABLE_SECURITY_DASHBOARDS_PLUGIN", "true")
     .WithExplicitStart();                                   // start from the dashboard when needed
 
-var docling = builder.AddContainer("docling", "ghcr.io/docling-project/docling-serve", "<pinned-tag>")
+var docling = builder.AddContainer("docling", "docling-project/docling-serve-cpu", "v1.35.0")   // ghcr.io, CPU-only image
     .WithHttpEndpoint(port: 5011, targetPort: 5001, name: "http")
     .WithEnvironment("DOCLING_SERVE_MAX_SYNC_WAIT", "600")
     .WithEnvironment("DOCLING_SERVE_ENABLE_UI", "true")
@@ -133,28 +133,28 @@ if (langfuseOn) builder.AddLangfuse(postgres, api, worker);   // see 0.5 (own Re
 builder.Build().Run();
 ```
 
-- [ ] **Optional secrets must not block startup.** Aspire waits (and asks in the dashboard) for any parameter that has no value, so the sketch's unconditional `telegram-bot-token` would hold `api` back until it's set. Read the optional values (`Parameters:telegram-bot-token`, Langfuse keys) from `builder.Configuration`, and only add the parameter and `WithEnvironment(...)` (plus `Telegram__Enabled=true`) when a value exists. `jina-api-key` can stay required, because hybrid search and ingestion need it.
-- [ ] An optional Ollama container (`CommunityToolkit.Aspire.Hosting.Ollama`) behind `Ollama:UseContainer=false`. The default stays the Windows host Ollama.
-- [ ] Persistent container lifetimes, so restarting the AppHost doesn't restart OpenSearch and Postgres, and named volumes, so data survives.
+- [x] **Optional secrets must not block startup.** Aspire waits (and asks in the dashboard) for any parameter that has no value, so the sketch's unconditional `telegram-bot-token` would hold `api` back until it's set. Read the optional values (`Parameters:telegram-bot-token`, Langfuse keys) from `builder.Configuration`, and only add the parameter and `WithEnvironment(...)` (plus `Telegram__Enabled=true`) when a value exists. `jina-api-key` can stay required, because hybrid search and ingestion need it.
+- [x] An optional Ollama container (`CommunityToolkit.Aspire.Hosting.Ollama`) behind `Ollama:UseContainer=false`. The default stays the Windows host Ollama. *(Built, not yet run.)*
+- [x] Persistent container lifetimes, so restarting the AppHost doesn't restart OpenSearch and Postgres, and named volumes, so data survives.
 
 ### 0.5 Optional Langfuse stack (`AppHost/LangfuseExtensions.cs`)
-- [ ] `AddLangfuse(...)` adds `clickhouse` (24.8-alpine), `langfuse-minio` (`cgr.dev/chainguard/minio`), `langfuse-worker` (`langfuse/langfuse-worker:3`) and `langfuse-web` (`langfuse/langfuse:3`, port 3010). Copy the environment from the Python repo's `compose.yml`.
-- [ ] **Reuse** the main Postgres server (a `langfuse` database) instead of a separate container. That saves most of the ~300 MB.
-- [ ] Give Langfuse its **own** small Redis (`langfuse-redis`, `--maxmemory-policy noeviction`, no volume needed). Langfuse's BullMQ queues require `noeviction`, and the main Redis uses `allkeys-lru` for the answer cache (D13).
-- [ ] Headless init through `LANGFUSE_INIT_ORG_ID`, `LANGFUSE_INIT_PROJECT_ID`, `LANGFUSE_INIT_PROJECT_PUBLIC_KEY` and `LANGFUSE_INIT_PROJECT_SECRET_KEY`, so the project keys come from AppHost secret parameters and match what Api and Worker send. This is the same idea as your `compose.override.yml` today.
-- [ ] Pass `Langfuse__Enabled=true`, `Langfuse__BaseUrl`, `Langfuse__PublicKey` and `Langfuse__SecretKey` to `api` and `worker` only when it's enabled.
+- [x] `AddLangfuse(...)` adds `clickhouse` (24.8-alpine), `langfuse-minio` (`cgr.dev/chainguard/minio`), `langfuse-worker` (`langfuse/langfuse-worker:3`) and `langfuse-web` (`langfuse/langfuse:3`, port 3010). Copy the environment from the Python repo's `compose.yml`.
+- [x] **Reuse** the main Postgres server (a `langfuse` database) instead of a separate container. That saves most of the ~300 MB.
+- [x] Give Langfuse its **own** small Redis (`langfuse-redis`, `--maxmemory-policy noeviction`, no volume needed). Langfuse's BullMQ queues require `noeviction`, and the main Redis uses `allkeys-lru` for the answer cache (D13).
+- [x] Headless init through `LANGFUSE_INIT_ORG_ID`, `LANGFUSE_INIT_PROJECT_ID`, `LANGFUSE_INIT_PROJECT_PUBLIC_KEY` and `LANGFUSE_INIT_PROJECT_SECRET_KEY`, so the project keys come from AppHost secret parameters and match what Api and Worker send. This is the same idea as your `compose.override.yml` today.
+- [x] Pass `Langfuse__Enabled=true`, `Langfuse__BaseUrl`, `Langfuse__PublicKey` and `Langfuse__SecretKey` to `api` and `worker` only when it's enabled.
 
 ### 0.6 ServiceDefaults
-- [ ] Keep the template's OTel, health-check and service-discovery setup.
-- [ ] Add `ConfigureHttpJsonOptions` with `JsonNamingPolicy.SnakeCaseLower` (used by Api).
-- [ ] **R1 spike:** the template calls `http.AddStandardResilienceHandler()` for **every** HttpClient (total timeout about 30 s). Write a 20-line test that registers a named client, replaces its resilience handler with a custom one (5-minute timeout), and calls an endpoint that takes 45 s (WireMock with a delay). Record the working pattern in `CLAUDE.md`, because phases 3 and 4 depend on it for Ollama, docling and Jina.
+- [x] Keep the template's OTel, health-check and service-discovery setup.
+- [x] Add `ConfigureHttpJsonOptions` with `JsonNamingPolicy.SnakeCaseLower` (used by Api).
+- [x] **R1 spike:** the template calls `http.AddStandardResilienceHandler()` for **every** HttpClient (total timeout about 30 s). Write a 20-line test that registers a named client, replaces its resilience handler with a custom one (5-minute timeout), and calls an endpoint that takes 45 s (WireMock with a delay). Record the working pattern in `CLAUDE.md`, because phases 3 and 4 depend on it for Ollama, docling and Jina.
 
 ### 0.7 CI skeleton
-- [ ] `.github/workflows/ci.yml`: checkout, `actions/setup-dotnet` (from global.json), `dotnet restore`, `dotnet build -c Release`, `dotnet format --verify-no-changes`, `dotnet test tests/PaperPilot.UnitTests`. Integration tests are added in phase 8.
+- [x] `.github/workflows/ci.yml`: checkout, `actions/setup-dotnet` (from global.json), `dotnet restore`, `dotnet build -c Release`, `dotnet format --verify-no-changes`, `dotnet test tests/PaperPilot.UnitTests`. Integration tests are added in phase 8.
 
 ## Done when
-- [ ] `aspire run` opens the dashboard. `postgres`, `redis`, `opensearch` and `docling` are healthy, and `migrations` runs and exits (no migrations yet).
-- [ ] `curl http://localhost:9210/_cluster/health` returns green or yellow, and `http://localhost:5011/docs` shows the docling-serve API.
-- [ ] `docker stats` shows total container memory below about 5 GB without Langfuse. Write down the actual number in `CLAUDE.md`.
-- [ ] The R1 spike pattern is written down.
+- [x] `aspire run` opens the dashboard. `postgres`, `redis`, `opensearch` and `docling` are healthy, and `migrations` runs and exits (no migrations yet).
+- [x] `curl http://localhost:9210/_cluster/health` returns green or yellow, and `http://localhost:5011/docs` shows the docling-serve API.
+- [x] `docker stats` shows total container memory below about 5 GB without Langfuse. Write down the actual number in `CLAUDE.md`. *(2.05 GiB idle; 3.9 GiB with Langfuse.)*
+- [x] The R1 spike pattern is written down.
 - [ ] CI is green on `main`.

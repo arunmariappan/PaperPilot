@@ -10,8 +10,13 @@ from the Python version (`B`/`C`/`N` IDs).
 dotnet build                                      # warnings are errors
 dotnet test --project tests/PaperPilot.UnitTests  # Microsoft.Testing.Platform (global.json), not VSTest
 dotnet format --verify-no-changes                 # CI runs this
-dotnet run --project src/PaperPilot.AppHost       # whole stack; or `aspire run`
+dotnet run --project src/PaperPilot.AppHost       # whole stack in the foreground; or `aspire run`
+aspire start --apphost src/PaperPilot.AppHost     # in the background (PowerShell); `aspire describe`, `aspire logs <resource>`
+aspire stop --apphost src/PaperPilot.AppHost
 ```
+
+Stop the AppHost with Ctrl+C or `aspire stop`. Killing the process leaves session containers (docling, Langfuse)
+running, and the next start then fails on their pinned ports; remove them with `docker rm -f`.
 
 - Required secret (Api and Worker wait until it's set):
   `dotnet user-secrets set Parameters:jina-api-key <value> --project src/PaperPilot.AppHost`
@@ -62,3 +67,17 @@ ServiceDefaults ← every host
   stack used docling 2.52.
 - **Optional parameters.** Aspire waits for any parameter without a value, so optional secrets are only added
   when configuration has them (see `AppHost.cs`).
+- **Langfuse** (v3.225 when first run) initialises headlessly: org `paperpilot-org`, project `paperpilot`, user
+  `admin@example.com`, password in user secrets as `Parameters:langfuse-admin-password`. Session containers reach the
+  persistent Postgres over the container network, so `DATABASE_URL` comes from `UriExpression`.
+- **Known log noise:** at startup the AppHost may log one `crit` from `DcpExecutor` ("Watch task over Kubernetes
+  ContainerExec resources terminated unexpectedly", a 1-minute timeout). Resources are unaffected.
+
+## Measured
+
+| Configuration | Docker memory (idle, 2026-10-02) |
+|---|---|
+| Without Langfuse | 2.05 GiB (OpenSearch 1.05, docling 0.96, Postgres 0.06, Redis 0.01) |
+| With Langfuse | 3.9 GiB (+ langfuse-web 1.1, langfuse-worker 0.46, ClickHouse 0.34, MinIO 0.06) |
+
+The docling-serve-cpu image is 7.65 GB on disk. The R1 unit tests take ~35 s (they wait for slow responses).
