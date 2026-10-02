@@ -5,7 +5,8 @@ An arXiv CS.AI paper curator built on .NET 10 and Aspire: daily ingestion of new
 
 The design, decisions and roadmap are in [docs/plan/](docs/plan/README.md).
 
-> **Status:** phase 2 (search). `/api/v1/health` and `/api/v1/hybrid-search/` work; question answering comes next.
+> **Status:** phase 3 (classic RAG). `/api/v1/ask`, `/stream` (server-sent events), `/hybrid-search/`, `/models`,
+> `/feedback` and `/health` work, with an answer cache and tracing; ingestion and agentic RAG come next.
 
 ## Prerequisites
 

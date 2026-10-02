@@ -18,6 +18,7 @@ dotnet ef migrations add <Name> --project src/PaperPilot.Infrastructure   --star
 dotnet run --project src/PaperPilot.AppHost       # whole stack in the foreground; or `aspire run`
 aspire start --apphost src/PaperPilot.AppHost     # in the background (PowerShell); `aspire describe`, `aspire logs <resource>`
 aspire stop --apphost src/PaperPilot.AppHost
+aspire otel traces api --apphost src/PaperPilot.AppHost --trace-id <id> --format Json   # a trace from the dashboard
 ```
 
 Stop the AppHost with Ctrl+C or `aspire stop`. Killing the process leaves session containers (docling, Langfuse)
@@ -92,6 +93,25 @@ ServiceDefaults ← every host
 - **Testcontainers:** an HTTP wait strategy's `ForPath` must not contain a query string (it never matches); the
   OpenSearch fixture waits on `/_cluster/health` and then polls for green/yellow. Container tests share one xUnit
   collection (`Containers`), so they run sequentially against one Postgres and one OpenSearch.
+- **LLM (plan R5).** `AddPaperPilotLlm()` registers OllamaSharp as `IChatClient` (OTel spans with prompts and
+  completions from source `PaperPilot.Llm`, plus logging). Build `ChatOptions` with `ChatOptionsFactory`: `think` goes
+  through `AdditionalProperties["think"]`, sampling settings into Ollama's `options`. Structured output
+  (`GetResponseAsync<T>`) works with `qwen3.5:9b`. The `ollama` HTTP client has no retries; its timeout is
+  `Ollama:TimeoutSeconds`.
+- **Tracing (plan R6).**
+  - RAG spans come from `PaperPilot.Rag` (`RagTelemetry`) and carry `langfuse.*` attributes. Langfuse gets its own tracer
+    provider (`LangfuseExporter`) that listens only to `PaperPilot.*` and `Microsoft.Agents.AI*`.
+  - Don't subclass `CompositeProcessor` to filter spans: the SDK nests every later processor inside a root
+    `CompositeProcessor`, which cut the Aspire dashboard down to the filtered spans.
+  - In Langfuse the chat span is a generation with token usage. `rag_request` points at the ASP.NET span as its parent,
+    which Langfuse never gets.
+  - To query Langfuse, read the keys from the AppHost user secrets inside a script; never print them.
+- **Activities in async iterators:** `Activity.Current` resets at every `yield`, so spans started after one lose their
+  parent. `RagService.StreamAsync` runs the pipeline in a normal async method that writes to a channel.
+- **WireMock** adds a request to `LogEntries` only after the client already has the response, so assert on it after
+  the call returns (or poll briefly), never in a test that aborts the request.
+- **`HealthChecks` is ambiguous** in projects that reference `Aspire.StackExchange.Redis` (it brings a root
+  `HealthChecks.*` namespace); write `PaperPilot.Infrastructure.HealthChecks.ApiTag`.
 - **Known log noise:** at startup the AppHost may log one `crit` from `DcpExecutor` ("Watch task over Kubernetes
   ContainerExec resources terminated unexpectedly", a 1-minute timeout). Resources are unaffected.
 

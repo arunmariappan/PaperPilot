@@ -40,11 +40,11 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 
 | Python | PaperPilot | Notes |
 |---|---|---|
-| `src/services/ollama/client.py` | `OllamaSharp` `IChatClient` (registered through `CommunityToolkit.Aspire.OllamaSharp`), `src/PaperPilot.Infrastructure/Llm/OllamaHealthCheck.cs`, `OllamaModelCatalog.cs` | The hand-written usage-metadata parsing goes away: `ChatResponse.Usage` plus OTel GenAI attributes cover it. |
+| `src/services/ollama/client.py` | `OllamaSharp` `IChatClient` (registered in `src/PaperPilot.Infrastructure/Llm/LlmRegistration.cs`), `ChatOptionsFactory.cs`, `OllamaModelCatalog.cs`; the health check is in `src/PaperPilot.Infrastructure/HealthChecks.cs` | The hand-written usage-metadata parsing goes away: `ChatResponse.Usage` plus OTel GenAI attributes cover it. |
 | `src/services/ollama/prompts.py`, `prompts/rag_system.txt` | `src/PaperPilot.Rag/Prompts/RagPromptBuilder.cs`, `Prompts/rag_system.txt` (embedded) | C3, C4 |
 | `src/schemas/ollama.py` | Dropped | C4 |
 | `src/services/cache/client.py` | `src/PaperPilot.Infrastructure/Caching/AnswerCache.cs` + `src/PaperPilot.Core/Caching/CacheKey.cs` | C6 |
-| `src/services/langfuse/client.py`, `tracer.py` | `src/PaperPilot.ServiceDefaults/Extensions.cs` (OTel + Langfuse OTLP exporter), `src/PaperPilot.Rag/Telemetry/RagActivitySource.cs`, `src/PaperPilot.Infrastructure/Observability/LangfuseScoresClient.cs` | Spans become `Activity` objects. Feedback goes to Langfuse `POST /api/public/scores`. |
+| `src/services/langfuse/client.py`, `tracer.py` | `src/PaperPilot.ServiceDefaults/LangfuseExporter.cs` (Langfuse OTLP exporter), `src/PaperPilot.Rag/Telemetry/RagTelemetry.cs`, `src/PaperPilot.Infrastructure/Observability/LangfuseScoresClient.cs` | Spans become `Activity` objects. Feedback goes to Langfuse `POST /api/public/scores`. |
 
 ## Agentic RAG
 
