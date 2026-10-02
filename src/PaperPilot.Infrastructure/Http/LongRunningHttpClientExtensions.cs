@@ -47,16 +47,24 @@ public static class LongRunningHttpClientExtensions
     }
 
     /// <summary>For quick probes such as health checks: no retries, just <paramref name="timeout"/>.</summary>
-    public static IHttpClientBuilder WithoutResilience(this IHttpClientBuilder builder, TimeSpan timeout)
+    public static IHttpClientBuilder WithoutResilience(this IHttpClientBuilder builder, TimeSpan timeout) =>
+        builder.WithoutResilience(_ => timeout);
+
+    /// <summary>
+    /// No retries, and <c>HttpClient.Timeout</c> from <paramref name="timeout"/>, e.g. a value from options. For calls
+    /// where a retry costs more than a clean failure, like a minutes-long LLM generation.
+    /// </summary>
+    public static IHttpClientBuilder WithoutResilience(this IHttpClientBuilder builder, Func<IServiceProvider, TimeSpan> timeout)
     {
         ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(timeout);
 
         // Experimental in Microsoft.Extensions.Http.Resilience 10.x, but it is the supported way to drop the default handler.
 #pragma warning disable EXTEXP0001
         builder.RemoveAllResilienceHandlers();
 #pragma warning restore EXTEXP0001
 
-        builder.ConfigureHttpClient(client => client.Timeout = timeout);
+        builder.ConfigureHttpClient((services, client) => client.Timeout = timeout(services));
         return builder;
     }
 

@@ -27,7 +27,7 @@ internal static class HealthEndpoints
         CancellationToken cancellationToken)
     {
         var report = await healthChecks.CheckHealthAsync(
-            check => check.Tags.Contains(HealthChecks.ApiTag), cancellationToken);
+            check => check.Tags.Contains(PaperPilot.Infrastructure.HealthChecks.ApiTag), cancellationToken);
 
         var services = report.Entries.ToDictionary(
             entry => entry.Key,

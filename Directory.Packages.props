@@ -19,6 +19,11 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.17.13" />
   </ItemGroup>
+  <ItemGroup Label="LLM and cache">
+    <PackageVersion Include="Aspire.StackExchange.Redis" Version="13.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.10.0" />
+    <PackageVersion Include="OllamaSharp" Version="5.5.0" />
+  </ItemGroup>
   <ItemGroup Label="Persistence">
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.6.0" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
@@ -41,6 +46,7 @@
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.15.0" />
+    <PackageVersion Include="Testcontainers.Redis" Version="4.15.0" />
     <PackageVersion Include="WireMock.Net" Version="2.18.0" />
   </ItemGroup>
 </Project>

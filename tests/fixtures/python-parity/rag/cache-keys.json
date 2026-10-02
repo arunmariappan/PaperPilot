@@ -1,0 +1,96 @@
+[
+  {
+    "name": "defaults",
+    "input": {
+      "query": "What are transformers?",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "qwen3.5:9b",
+      "categories": null
+    },
+    "expected_hash": "82a8be81454dab99"
+  },
+  {
+    "name": "categories-sorted",
+    "input": {
+      "query": "What are transformers?",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "qwen3.5:9b",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ]
+    },
+    "expected_hash": "0ad0f6f85159e631"
+  },
+  {
+    "name": "categories-already-sorted",
+    "input": {
+      "query": "What are transformers?",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "qwen3.5:9b",
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ]
+    },
+    "expected_hash": "0ad0f6f85159e631"
+  },
+  {
+    "name": "categories-empty",
+    "input": {
+      "query": "What are transformers?",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "qwen3.5:9b",
+      "categories": []
+    },
+    "expected_hash": "82a8be81454dab99"
+  },
+  {
+    "name": "bm25-top10",
+    "input": {
+      "query": "What are transformers?",
+      "top_k": 10,
+      "use_hybrid": false,
+      "model": "qwen3.5:9b",
+      "categories": null
+    },
+    "expected_hash": "e5583dd31abd9f13"
+  },
+  {
+    "name": "other-model",
+    "input": {
+      "query": "What are transformers?",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "llama3.2:1b",
+      "categories": null
+    },
+    "expected_hash": "f33b0f5cf68ac386"
+  },
+  {
+    "name": "escapes",
+    "input": {
+      "query": "Say \"hi\"\\ then\n\ttab \u0001  end",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "qwen3.5:9b",
+      "categories": null
+    },
+    "expected_hash": "2c8065a3dcffcd41"
+  },
+  {
+    "name": "non-ascii",
+    "input": {
+      "query": "Qu'est-ce que l'attention ? 注意力 😀 ü",
+      "top_k": 3,
+      "use_hybrid": true,
+      "model": "qwen3.5:9b",
+      "categories": null
+    },
+    "expected_hash": "cc93436253d3eda0"
+  }
+]

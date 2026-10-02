@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PaperPilot.Infrastructure.Http;
+using PaperPilot.Infrastructure.Llm;
 using PaperPilot.Infrastructure.Persistence;
 using PaperPilot.Infrastructure.Search;
 
@@ -76,7 +77,7 @@ internal sealed class OllamaHealthCheck(IHttpClientFactory httpClientFactory, IC
 {
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        var endpoint = OllamaEndpoint(configuration);
+        var endpoint = OllamaEndpoint.FromConfiguration(configuration);
         if (endpoint is null)
         {
             return new HealthCheckResult(context.Registration.FailureStatus, "ConnectionStrings:ollama is not set");
@@ -98,19 +99,5 @@ internal sealed class OllamaHealthCheck(IHttpClientFactory httpClientFactory, IC
         {
             return new HealthCheckResult(context.Registration.FailureStatus, "Ollama service timeout", ex);
         }
-    }
-
-    /// <summary>The <c>Endpoint</c> from the <c>ollama</c> connection string (<c>Endpoint=http://localhost:11434</c>).</summary>
-    internal static Uri? OllamaEndpoint(IConfiguration configuration)
-    {
-        var connectionString = configuration.GetConnectionString("ollama");
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return null;
-        }
-
-        var parts = new DbConnectionStringBuilder { ConnectionString = connectionString };
-        var endpoint = parts.TryGetValue("Endpoint", out var value) ? value?.ToString() : connectionString;
-        return Uri.TryCreate(endpoint?.TrimEnd('/') + "/", UriKind.Absolute, out var uri) ? uri : null;
     }
 }
