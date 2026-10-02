@@ -6,7 +6,7 @@ using PaperPilot.Infrastructure.Persistence;
 
 namespace PaperPilot.IntegrationTests.Persistence;
 
-[Collection(PostgresCollectionDefinition.Name)]
+[Collection(ContainersCollectionDefinition.Name)]
 public sealed class SchemaTests(PostgresFixture postgres) : IAsyncLifetime
 {
     public async ValueTask InitializeAsync()

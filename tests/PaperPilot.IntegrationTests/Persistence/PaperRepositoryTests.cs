@@ -5,7 +5,7 @@ using PaperPilot.Infrastructure.Persistence;
 
 namespace PaperPilot.IntegrationTests.Persistence;
 
-[Collection(PostgresCollectionDefinition.Name)]
+[Collection(ContainersCollectionDefinition.Name)]
 public sealed class PaperRepositoryTests(PostgresFixture postgres) : IAsyncLifetime
 {
     private static readonly DateTimeOffset Published = new(2026, 9, 30, 17, 59, 59, TimeSpan.Zero);
