@@ -30,7 +30,7 @@ public static class Extensions
         builder.Services.ConfigureHttpClientDefaults(http =>
         {
             // Turn on resilience by default. Its ~30 s total timeout is too short for Ollama, docling and
-            // Jina back-off; those clients replace it with AddLongRunningResilienceHandler.
+            // Jina back-off; those clients replace it with AddLongRunningResilienceHandler (PaperPilot.Infrastructure.Http).
             http.AddStandardResilienceHandler();
 
             // Turn on service discovery by default

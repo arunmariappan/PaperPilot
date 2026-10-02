@@ -1,0 +1,310 @@
+[
+  {
+    "name": "text-nocat-s10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "categories": null,
+      "embedding": [
+        0.1,
+        -0.2,
+        0.3,
+        -0.4
+      ]
+    },
+    "expected": {
+      "index": "arxiv-papers-chunks",
+      "params": {
+        "search_pipeline": "hybrid-rrf-pipeline"
+      },
+      "body": {
+        "size": 10,
+        "query": {
+          "hybrid": {
+            "queries": [
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "multi_match": {
+                        "query": "machine learning transformers",
+                        "fields": [
+                          "chunk_text^3",
+                          "title^2",
+                          "abstract^1"
+                        ],
+                        "type": "best_fields",
+                        "operator": "or",
+                        "fuzziness": "AUTO",
+                        "prefix_length": 2
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "knn": {
+                  "embedding": {
+                    "vector": [
+                      0.1,
+                      -0.2,
+                      0.3,
+                      -0.4
+                    ],
+                    "k": 20
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "_source": {
+          "excludes": [
+            "embedding"
+          ]
+        },
+        "highlight": {
+          "fields": {
+            "chunk_text": {
+              "fragment_size": 150,
+              "number_of_fragments": 2,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            },
+            "title": {
+              "fragment_size": 0,
+              "number_of_fragments": 0,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            },
+            "abstract": {
+              "fragment_size": 150,
+              "number_of_fragments": 1,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            }
+          },
+          "require_field_match": false
+        }
+      }
+    }
+  },
+  {
+    "name": "text-cats-s5",
+    "input": {
+      "query": "attention mechanisms",
+      "size": 5,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "embedding": [
+        0.1,
+        -0.2,
+        0.3,
+        -0.4
+      ]
+    },
+    "expected": {
+      "index": "arxiv-papers-chunks",
+      "params": {
+        "search_pipeline": "hybrid-rrf-pipeline"
+      },
+      "body": {
+        "size": 5,
+        "query": {
+          "hybrid": {
+            "queries": [
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "multi_match": {
+                        "query": "attention mechanisms",
+                        "fields": [
+                          "chunk_text^3",
+                          "title^2",
+                          "abstract^1"
+                        ],
+                        "type": "best_fields",
+                        "operator": "or",
+                        "fuzziness": "AUTO",
+                        "prefix_length": 2
+                      }
+                    }
+                  ],
+                  "filter": [
+                    {
+                      "terms": {
+                        "categories": [
+                          "cs.AI",
+                          "cs.LG"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "knn": {
+                  "embedding": {
+                    "vector": [
+                      0.1,
+                      -0.2,
+                      0.3,
+                      -0.4
+                    ],
+                    "k": 10
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "_source": {
+          "excludes": [
+            "embedding"
+          ]
+        },
+        "highlight": {
+          "fields": {
+            "chunk_text": {
+              "fragment_size": 150,
+              "number_of_fragments": 2,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            },
+            "title": {
+              "fragment_size": 0,
+              "number_of_fragments": 0,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            },
+            "abstract": {
+              "fragment_size": 150,
+              "number_of_fragments": 1,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            }
+          },
+          "require_field_match": false
+        }
+      }
+    }
+  },
+  {
+    "name": "blank-nocat-s3",
+    "input": {
+      "query": "   ",
+      "size": 3,
+      "categories": null,
+      "embedding": [
+        0.1,
+        -0.2,
+        0.3,
+        -0.4
+      ]
+    },
+    "expected": {
+      "index": "arxiv-papers-chunks",
+      "params": {
+        "search_pipeline": "hybrid-rrf-pipeline"
+      },
+      "body": {
+        "size": 3,
+        "query": {
+          "hybrid": {
+            "queries": [
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "match_all": {}
+                    }
+                  ]
+                }
+              },
+              {
+                "knn": {
+                  "embedding": {
+                    "vector": [
+                      0.1,
+                      -0.2,
+                      0.3,
+                      -0.4
+                    ],
+                    "k": 6
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "_source": {
+          "excludes": [
+            "embedding"
+          ]
+        },
+        "highlight": {
+          "fields": {
+            "chunk_text": {
+              "fragment_size": 150,
+              "number_of_fragments": 2,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            },
+            "title": {
+              "fragment_size": 0,
+              "number_of_fragments": 0,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            },
+            "abstract": {
+              "fragment_size": 150,
+              "number_of_fragments": 1,
+              "pre_tags": [
+                "<mark>"
+              ],
+              "post_tags": [
+                "</mark>"
+              ]
+            }
+          },
+          "require_field_match": false
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,2834 @@
+[
+  {
+    "name": "text-nocat-relevance-p10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "from": 0,
+      "categories": null,
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      }
+    }
+  },
+  {
+    "name": "text-nocat-relevance-p5f20",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 5,
+      "from": 20,
+      "categories": null,
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      }
+    }
+  },
+  {
+    "name": "text-nocat-latest-p10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "from": 0,
+      "categories": null,
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "text-nocat-latest-p5f20",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 5,
+      "from": 20,
+      "categories": null,
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "text-cats-relevance-p10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "from": 0,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      }
+    }
+  },
+  {
+    "name": "text-cats-relevance-p5f20",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 5,
+      "from": 20,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      }
+    }
+  },
+  {
+    "name": "text-cats-latest-p10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "from": 0,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "text-cats-latest-p5f20",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 5,
+      "from": 20,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "text-emptycats-relevance-p10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "from": 0,
+      "categories": [],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      }
+    }
+  },
+  {
+    "name": "text-emptycats-relevance-p5f20",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 5,
+      "from": 20,
+      "categories": [],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      }
+    }
+  },
+  {
+    "name": "text-emptycats-latest-p10",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 10,
+      "from": 0,
+      "categories": [],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "text-emptycats-latest-p5f20",
+    "input": {
+      "query": "machine learning transformers",
+      "size": 5,
+      "from": 20,
+      "categories": [],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": "machine learning transformers",
+                "fields": [
+                  "chunk_text^3",
+                  "title^2",
+                  "abstract^1"
+                ],
+                "type": "best_fields",
+                "operator": "or",
+                "fuzziness": "AUTO",
+                "prefix_length": 2
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-nocat-relevance-p10",
+    "input": {
+      "query": "",
+      "size": 10,
+      "from": 0,
+      "categories": null,
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-nocat-relevance-p5f20",
+    "input": {
+      "query": "",
+      "size": 5,
+      "from": 20,
+      "categories": null,
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-nocat-latest-p10",
+    "input": {
+      "query": "",
+      "size": 10,
+      "from": 0,
+      "categories": null,
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-nocat-latest-p5f20",
+    "input": {
+      "query": "",
+      "size": 5,
+      "from": 20,
+      "categories": null,
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-cats-relevance-p10",
+    "input": {
+      "query": "",
+      "size": 10,
+      "from": 0,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-cats-relevance-p5f20",
+    "input": {
+      "query": "",
+      "size": 5,
+      "from": 20,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-cats-latest-p10",
+    "input": {
+      "query": "",
+      "size": 10,
+      "from": 0,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-cats-latest-p5f20",
+    "input": {
+      "query": "",
+      "size": 5,
+      "from": 20,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-emptycats-relevance-p10",
+    "input": {
+      "query": "",
+      "size": 10,
+      "from": 0,
+      "categories": [],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-emptycats-relevance-p5f20",
+    "input": {
+      "query": "",
+      "size": 5,
+      "from": 20,
+      "categories": [],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-emptycats-latest-p10",
+    "input": {
+      "query": "",
+      "size": 10,
+      "from": 0,
+      "categories": [],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "empty-emptycats-latest-p5f20",
+    "input": {
+      "query": "",
+      "size": 5,
+      "from": 20,
+      "categories": [],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-nocat-relevance-p10",
+    "input": {
+      "query": "   ",
+      "size": 10,
+      "from": 0,
+      "categories": null,
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-nocat-relevance-p5f20",
+    "input": {
+      "query": "   ",
+      "size": 5,
+      "from": 20,
+      "categories": null,
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-nocat-latest-p10",
+    "input": {
+      "query": "   ",
+      "size": 10,
+      "from": 0,
+      "categories": null,
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-nocat-latest-p5f20",
+    "input": {
+      "query": "   ",
+      "size": 5,
+      "from": 20,
+      "categories": null,
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-cats-relevance-p10",
+    "input": {
+      "query": "   ",
+      "size": 10,
+      "from": 0,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-cats-relevance-p5f20",
+    "input": {
+      "query": "   ",
+      "size": 5,
+      "from": 20,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-cats-latest-p10",
+    "input": {
+      "query": "   ",
+      "size": 10,
+      "from": 0,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-cats-latest-p5f20",
+    "input": {
+      "query": "   ",
+      "size": 5,
+      "from": 20,
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ],
+          "filter": [
+            {
+              "terms": {
+                "categories": [
+                  "cs.AI",
+                  "cs.LG"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-emptycats-relevance-p10",
+    "input": {
+      "query": "   ",
+      "size": 10,
+      "from": 0,
+      "categories": [],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-emptycats-relevance-p5f20",
+    "input": {
+      "query": "   ",
+      "size": 5,
+      "from": 20,
+      "categories": [],
+      "latest_papers": false
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-emptycats-latest-p10",
+    "input": {
+      "query": "   ",
+      "size": 10,
+      "from": 0,
+      "categories": [],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 10,
+      "from": 0,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  },
+  {
+    "name": "blank-emptycats-latest-p5f20",
+    "input": {
+      "query": "   ",
+      "size": 5,
+      "from": 20,
+      "categories": [],
+      "latest_papers": true
+    },
+    "expected": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match_all": {}
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "from": 20,
+      "track_total_hits": true,
+      "_source": {
+        "excludes": [
+          "embedding"
+        ]
+      },
+      "highlight": {
+        "fields": {
+          "chunk_text": {
+            "fragment_size": 150,
+            "number_of_fragments": 2,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "title": {
+            "fragment_size": 0,
+            "number_of_fragments": 0,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          },
+          "abstract": {
+            "fragment_size": 150,
+            "number_of_fragments": 1,
+            "pre_tags": [
+              "<mark>"
+            ],
+            "post_tags": [
+              "</mark>"
+            ]
+          }
+        },
+        "require_field_match": false
+      },
+      "sort": [
+        {
+          "published_date": {
+            "order": "desc"
+          }
+        },
+        "_score"
+      ]
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "description": "Post processor for hybrid RRF search",
+  "phase_results_processors": [
+    {
+      "score-ranker-processor": {
+        "combination": {
+          "technique": "rrf",
+          "rank_constant": 60
+        }
+      }
+    }
+  ]
+}
