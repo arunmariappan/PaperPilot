@@ -1,0 +1,801 @@
+{
+ "document": {
+  "filename": "sample-paper.pdf",
+  "md_content": null,
+  "json_content": {
+   "schema_name": "DoclingDocument",
+   "version": "1.10.0",
+   "name": "sample-paper",
+   "origin": {
+    "mimetype": "application/pdf",
+    "binary_hash": 13367861324013785915,
+    "filename": "sample-paper.pdf",
+    "uri": null
+   },
+   "furniture": {
+    "self_ref": "#/furniture",
+    "parent": null,
+    "children": [],
+    "content_layer": "furniture",
+    "meta": null,
+    "name": "_root_",
+    "label": "unspecified"
+   },
+   "body": {
+    "self_ref": "#/body",
+    "parent": null,
+    "children": [
+     {
+      "$ref": "#/texts/0"
+     },
+     {
+      "$ref": "#/texts/1"
+     },
+     {
+      "$ref": "#/texts/2"
+     },
+     {
+      "$ref": "#/texts/3"
+     },
+     {
+      "$ref": "#/texts/4"
+     },
+     {
+      "$ref": "#/texts/5"
+     },
+     {
+      "$ref": "#/texts/6"
+     },
+     {
+      "$ref": "#/texts/7"
+     },
+     {
+      "$ref": "#/texts/8"
+     },
+     {
+      "$ref": "#/texts/9"
+     },
+     {
+      "$ref": "#/texts/10"
+     },
+     {
+      "$ref": "#/texts/11"
+     },
+     {
+      "$ref": "#/texts/12"
+     },
+     {
+      "$ref": "#/texts/13"
+     },
+     {
+      "$ref": "#/texts/14"
+     },
+     {
+      "$ref": "#/texts/15"
+     },
+     {
+      "$ref": "#/texts/16"
+     },
+     {
+      "$ref": "#/texts/17"
+     },
+     {
+      "$ref": "#/texts/18"
+     },
+     {
+      "$ref": "#/groups/0"
+     }
+    ],
+    "content_layer": "body",
+    "meta": null,
+    "name": "_root_",
+    "label": "unspecified"
+   },
+   "groups": [
+    {
+     "self_ref": "#/groups/0",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [
+      {
+       "$ref": "#/texts/19"
+      },
+      {
+       "$ref": "#/texts/20"
+      }
+     ],
+     "content_layer": "body",
+     "meta": null,
+     "name": "list",
+     "label": "list"
+    }
+   ],
+   "texts": [
+    {
+     "self_ref": "#/texts/0",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.7040023803711,
+        "t": 781.7919921875,
+        "r": 559.9039916992188,
+        "b": 766.5440063476562,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        58
+       ]
+      }
+     ],
+     "orig": "Chunking Long Documents for Retrieval-Augmented Generation",
+     "text": "Chunking Long Documents for Retrieval-Augmented Generation",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/1",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.12000274658203,
+        "t": 753.5130004882812,
+        "r": 203.6800079345703,
+        "b": 728.8300170898438,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        56
+       ]
+      }
+     ],
+     "orig": "A. Example and B. Sample Example Institute of Technology",
+     "text": "A. Example and B. Sample Example Institute of Technology",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/2",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.23999786376953,
+        "t": 707.6160278320312,
+        "r": 120.38400268554688,
+        "b": 698.843994140625,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        8
+       ]
+      }
+     ],
+     "orig": "Abstract",
+     "text": "Abstract",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/3",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.05000305175781,
+        "t": 687.8300170898438,
+        "r": 441.33001708984375,
+        "b": 636.8300170898438,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        327
+       ]
+      }
+     ],
+     "orig": "Retrieval-augmented generation answers questions from a collection of documents, but long documents must first be split into passages. We compare fixed-size word windows with section-aware chunking on a set of synthetic papers and find that section-aware chunks keep related sentences together, which improves answer grounding.",
+     "text": "Retrieval-augmented generation answers questions from a collection of documents, but long documents must first be split into passages. We compare fixed-size word windows with section-aware chunking on a set of synthetic papers and find that section-aware chunks keep related sentences together, which improves answer grounding.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/4",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.8280029296875,
+        "t": 619.2000122070312,
+        "r": 151.2239990234375,
+        "b": 610.343994140625,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        14
+       ]
+      }
+     ],
+     "orig": "1 Introduction",
+     "text": "1 Introduction",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/5",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.12000274658203,
+        "t": 599.3300170898438,
+        "r": 449.8200378417969,
+        "b": 548.3400268554688,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        304
+       ]
+      }
+     ],
+     "orig": "Large language models answer questions fluently, yet they cannot cite sources they have never seen. Retrieval-augmented generation addresses this by searching a document collection and passing the most relevant passages to the model. The quality of those passages depends on how the documents were split.",
+     "text": "Large language models answer questions fluently, yet they cannot cite sources they have never seen. Retrieval-augmented generation addresses this by searching a document collection and passing the most relevant passages to the model. The quality of those passages depends on how the documents were split.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/6",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.16999816894531,
+        "t": 536.8300170898438,
+        "r": 421.65997314453125,
+        "b": 499.8299865722656,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        207
+       ]
+      }
+     ],
+     "orig": "This paper studies that split. We describe a hybrid strategy that keeps medium-sized sections whole, merges very short sections with their neighbours, and divides very long sections into overlapping windows.",
+     "text": "This paper studies that split. We describe a hybrid strategy that keeps medium-sized sections whole, merges very short sections with their neighbours, and divides very long sections into overlapping windows.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/7",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.31199645996094,
+        "t": 482.1159973144531,
+        "r": 158.75999450683594,
+        "b": 473.343994140625,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        14
+       ]
+      }
+     ],
+     "orig": "2 Related Work",
+     "text": "2 Related Work",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/8",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.12000274658203,
+        "t": 462.3299865722656,
+        "r": 432.8900451660156,
+        "b": 425.3299865722656,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        208
+       ]
+      }
+     ],
+     "orig": "Earlier systems used fixed windows of a few hundred words with a small overlap between consecutive windows. Other work splits on sentence boundaries or uses the layout of the source document to find headings.",
+     "text": "Earlier systems used fixed windows of a few hundred words with a small overlap between consecutive windows. Other work splits on sentence boundaries or uses the layout of the source document to find headings.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/9",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.3239974975586,
+        "t": 407.6159973144531,
+        "r": 123.947998046875,
+        "b": 398.78399658203125,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        8
+       ]
+      }
+     ],
+     "orig": "3 Method",
+     "text": "3 Method",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/10",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.12000274658203,
+        "t": 387.8299865722656,
+        "r": 423.0199890136719,
+        "b": 350.8399963378906,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        211
+       ]
+      }
+     ],
+     "orig": "Each document is first converted into a sequence of text items, each labelled as a title, a section header or ordinary text. Section headers start new sections; all other text is appended to the current section.",
+     "text": "Each document is first converted into a sequence of text items, each labelled as a title, a section header or ordinary text. Section headers start new sections; all other text is appended to the current section.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/11",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.3239974975586,
+        "t": 333.343994140625,
+        "r": 165.02398681640625,
+        "b": 324.28399658203125,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        15
+       ]
+      }
+     ],
+     "orig": "3.1 Window Size",
+     "text": "3.1 Window Size",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/12",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.25,
+        "t": 313.3299865722656,
+        "r": 434.2000427246094,
+        "b": 278.3699951171875,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        210
+       ]
+      }
+     ],
+     "orig": "Sections longer than eight hundred words are split into windows of six hundred words that overlap by one hundred words. Every window repeats the paper title and abstract so that it can be understood on its own.",
+     "text": "Sections longer than eight hundred words are split into windows of six hundred words that overlap by one hundred words. Every window repeats the paper title and abstract so that it can be understood on its own.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/13",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.3239974975586,
+        "t": 258.70001220703125,
+        "r": 153.58799743652344,
+        "b": 247.5279998779297,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        13
+       ]
+      }
+     ],
+     "orig": "4 Experiments",
+     "text": "4 Experiments",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/14",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.05000305175781,
+        "t": 238.8300018310547,
+        "r": 454.8399963378906,
+        "b": 203.89999389648438,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        198
+       ]
+      }
+     ],
+     "orig": "We built two hundred synthetic papers and asked one question per paper. Section-aware chunks answered more questions correctly than fixed windows, and the answers cited the right section more often.",
+     "text": "We built two hundred synthetic papers and asked one question per paper. Section-aware chunks answered more questions correctly than fixed windows, and the answers cited the right section more often.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/15",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.08999633789062,
+        "t": 190.3300018310547,
+        "r": 425.7300109863281,
+        "b": 167.33999633789062,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        103
+       ]
+      }
+     ],
+     "orig": "The gains were largest for papers with many short sections, where fixed windows mixed unrelated topics.",
+     "text": "The gains were largest for papers with many short sections, where fixed windows mixed unrelated topics.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/16",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.3239974975586,
+        "t": 149.843994140625,
+        "r": 146.5679931640625,
+        "b": 140.78399658203125,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        12
+       ]
+      }
+     ],
+     "orig": "5 Conclusion",
+     "text": "5 Conclusion",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/17",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "text",
+     "prov": [
+      {
+       "page_no": 1,
+       "bbox": {
+        "l": 72.05000305175781,
+        "t": 129.8300018310547,
+        "r": 414.6500244140625,
+        "b": 92.83000183105469,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        180
+       ]
+      }
+     ],
+     "orig": "Splitting documents along their own structure is a simple change that makes retrieved passages more coherent. Future work will look at tables and figures, which this study ignored.",
+     "text": "Splitting documents along their own structure is a simple change that makes retrieved passages more coherent. Future work will look at tables and figures, which this study ignored.",
+     "formatting": null,
+     "hyperlink": null
+    },
+    {
+     "self_ref": "#/texts/18",
+     "parent": {
+      "$ref": "#/body"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "section_header",
+     "prov": [
+      {
+       "page_no": 2,
+       "bbox": {
+        "l": 72.91200256347656,
+        "t": 778.7239990234375,
+        "r": 136.2480010986328,
+        "b": 769.843994140625,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        10
+       ]
+      }
+     ],
+     "orig": "References",
+     "text": "References",
+     "formatting": null,
+     "hyperlink": null,
+     "level": 1
+    },
+    {
+     "self_ref": "#/texts/19",
+     "parent": {
+      "$ref": "#/groups/0"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "list_item",
+     "prov": [
+      {
+       "page_no": 2,
+       "bbox": {
+        "l": 72.87999725341797,
+        "t": 758.8300170898438,
+        "r": 414.58001708984375,
+        "b": 749.8300170898438,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        84
+       ]
+      }
+     ],
+     "orig": "[1] A. Example. Passage retrieval for question answering. Journal of Examples, 2024.",
+     "text": "A. Example. Passage retrieval for question answering. Journal of Examples, 2024.",
+     "formatting": null,
+     "hyperlink": null,
+     "enumerated": true,
+     "marker": "[1]"
+    },
+    {
+     "self_ref": "#/texts/20",
+     "parent": {
+      "$ref": "#/groups/0"
+     },
+     "children": [],
+     "content_layer": "body",
+     "meta": null,
+     "label": "list_item",
+     "prov": [
+      {
+       "page_no": 2,
+       "bbox": {
+        "l": 72.87999725341797,
+        "t": 738.3300170898438,
+        "r": 404.5899658203125,
+        "b": 729.3300170898438,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "charspan": [
+        0,
+        78
+       ]
+      }
+     ],
+     "orig": "[2] B. Sample. Layout-aware document conversion. Proceedings of Samples, 2025.",
+     "text": "B. Sample. Layout-aware document conversion. Proceedings of Samples, 2025.",
+     "formatting": null,
+     "hyperlink": null,
+     "enumerated": true,
+     "marker": "[2]"
+    }
+   ],
+   "pictures": [],
+   "tables": [],
+   "key_value_items": [],
+   "form_items": [],
+   "pages": {
+    "1": {
+     "size": {
+      "width": 595.0,
+      "height": 842.0
+     },
+     "image": null,
+     "page_no": 1
+    },
+    "2": {
+     "size": {
+      "width": 595.0,
+      "height": 842.0
+     },
+     "image": null,
+     "page_no": 2
+    }
+   }
+  },
+  "html_content": null,
+  "text_content": "Chunking Long Documents for Retrieval-Augmented Generation\n\nA. Example and B. Sample Example Institute of Technology\n\nAbstract\n\nRetrieval-augmented generation answers questions from a collection of documents, but long documents must first be split into passages. We compare fixed-size word windows with section-aware chunking on a set of synthetic papers and find that section-aware chunks keep related sentences together, which improves answer grounding.\n\n1 Introduction\n\nLarge language models answer questions fluently, yet they cannot cite sources they have never seen. Retrieval-augmented generation addresses this by searching a document collection and passing the most relevant passages to the model. The quality of those passages depends on how the documents were split.\n\nThis paper studies that split. We describe a hybrid strategy that keeps medium-sized sections whole, merges very short sections with their neighbours, and divides very long sections into overlapping windows.\n\n2 Related Work\n\nEarlier systems used fixed windows of a few hundred words with a small overlap between consecutive windows. Other work splits on sentence boundaries or uses the layout of the source document to find headings.\n\n3 Method\n\nEach document is first converted into a sequence of text items, each labelled as a title, a section header or ordinary text. Section headers start new sections; all other text is appended to the current section.\n\n3.1 Window Size\n\nSections longer than eight hundred words are split into windows of six hundred words that overlap by one hundred words. Every window repeats the paper title and abstract so that it can be understood on its own.\n\n4 Experiments\n\nWe built two hundred synthetic papers and asked one question per paper. Section-aware chunks answered more questions correctly than fixed windows, and the answers cited the right section more often.\n\nThe gains were largest for papers with many short sections, where fixed windows mixed unrelated topics.\n\n5 Conclusion\n\nSplitting documents along their own structure is a simple change that makes retrieved passages more coherent. Future work will look at tables and figures, which this study ignored.\n\nReferences\n\n- [1] A. Example. Passage retrieval for question answering. Journal of Examples, 2024.\n- [2] B. Sample. Layout-aware document conversion. Proceedings of Samples, 2025.",
+  "doctags_content": null,
+  "doclang_content": null
+ },
+ "status": "success",
+ "errors": [],
+ "processing_time": 1.7476456100012001,
+ "timings": {},
+ "confidence": {
+  "parse_score": 1.0,
+  "layout_score": 0.8991349074575636,
+  "table_score": null,
+  "ocr_score": null,
+  "mean_score": 0.9495674537287818,
+  "low_score": 0.9041781620846854,
+  "mean_grade": "excellent",
+  "low_grade": "excellent"
+ }
+}

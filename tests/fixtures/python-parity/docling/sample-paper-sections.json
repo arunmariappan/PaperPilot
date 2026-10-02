@@ -1,0 +1,46 @@
+{
+  "sections": [
+    {
+      "title": "Chunking Long Documents for Retrieval-Augmented Generation",
+      "content": "A. Example and B. Sample Example Institute of Technology"
+    },
+    {
+      "title": "Abstract",
+      "content": "Retrieval-augmented generation answers questions from a collection of documents, but long documents must first be split into passages. We compare fixed-size word windows with section-aware chunking on a set of synthetic papers and find that section-aware chunks keep related sentences together, which improves answer grounding."
+    },
+    {
+      "title": "1 Introduction",
+      "content": "Large language models answer questions fluently, yet they cannot cite sources they have never seen. Retrieval-augmented generation addresses this by searching a document collection and passing the most relevant passages to the model. The quality of those passages depends on how the documents were split.\nThis paper studies that split. We describe a hybrid strategy that keeps medium-sized sections whole, merges very short sections with their neighbours, and divides very long sections into overlapping windows."
+    },
+    {
+      "title": "2 Related Work",
+      "content": "Earlier systems used fixed windows of a few hundred words with a small overlap between consecutive windows. Other work splits on sentence boundaries or uses the layout of the source document to find headings."
+    },
+    {
+      "title": "3 Method",
+      "content": "Each document is first converted into a sequence of text items, each labelled as a title, a section header or ordinary text. Section headers start new sections; all other text is appended to the current section."
+    },
+    {
+      "title": "3.1 Window Size",
+      "content": "Sections longer than eight hundred words are split into windows of six hundred words that overlap by one hundred words. Every window repeats the paper title and abstract so that it can be understood on its own."
+    },
+    {
+      "title": "4 Experiments",
+      "content": "We built two hundred synthetic papers and asked one question per paper. Section-aware chunks answered more questions correctly than fixed windows, and the answers cited the right section more often.\nThe gains were largest for papers with many short sections, where fixed windows mixed unrelated topics."
+    },
+    {
+      "title": "5 Conclusion",
+      "content": "Splitting documents along their own structure is a simple change that makes retrieved passages more coherent. Future work will look at tables and figures, which this study ignored."
+    },
+    {
+      "title": "References",
+      "content": "A. Example. Passage retrieval for question answering. Journal of Examples, 2024.\nB. Sample. Layout-aware document conversion. Proceedings of Samples, 2025."
+    }
+  ],
+  "raw_text_start": "## Chunking Long Documents for Retrieval-Augmented Generation\n\nA. Example and B. Sample Example Institute of Technology\n\n## Abstract\n\nRetrieval-augmented generation answers questions from a collection of documents, but long documents must first be split into passages. We compare fixed-size word wind",
+  "parser_used": "docling",
+  "metadata": {
+    "source": "docling",
+    "note": "Content extracted from PDF, metadata comes from arXiv API"
+  }
+}
