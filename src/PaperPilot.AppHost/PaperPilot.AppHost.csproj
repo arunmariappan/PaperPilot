@@ -1,0 +1,26 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.0">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>9e5f97c4-c159-48d9-a9d3-9a4a1a3dac98</UserSecretsId>
+    <!-- DCP and the dashboard come from pinned NuGet packages, not from an installed Aspire CLI,
+         so the AppHost builds the same in CI (which has no CLI) and in any shell. -->
+    <AspireUseCliBundle>false</AspireUseCliBundle>
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.Ollama" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PaperPilot.Api\PaperPilot.Api.csproj" />
+    <ProjectReference Include="..\PaperPilot.Worker\PaperPilot.Worker.csproj" />
+    <ProjectReference Include="..\PaperPilot.MigrationService\PaperPilot.MigrationService.csproj" />
+    <ProjectReference Include="..\PaperPilot.Web\PaperPilot.Web.csproj" />
+  </ItemGroup>
+
+</Project>

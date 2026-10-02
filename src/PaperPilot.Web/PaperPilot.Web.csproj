@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
+    <ProjectReference Include="../PaperPilot.Core/PaperPilot.Core.csproj" />
+  </ItemGroup>
+
+</Project>

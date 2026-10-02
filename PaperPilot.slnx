@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PaperPilot.Api/PaperPilot.Api.csproj" />
+    <Project Path="src/PaperPilot.AppHost/PaperPilot.AppHost.csproj" />
+    <Project Path="src/PaperPilot.Core/PaperPilot.Core.csproj" />
+    <Project Path="src/PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
+    <Project Path="src/PaperPilot.Ingestion/PaperPilot.Ingestion.csproj" />
+    <Project Path="src/PaperPilot.MigrationService/PaperPilot.MigrationService.csproj" />
+    <Project Path="src/PaperPilot.Rag/PaperPilot.Rag.csproj" />
+    <Project Path="src/PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
+    <Project Path="src/PaperPilot.Web/PaperPilot.Web.csproj" />
+    <Project Path="src/PaperPilot.Worker/PaperPilot.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PaperPilot.IntegrationTests/PaperPilot.IntegrationTests.csproj" />
+    <Project Path="tests/PaperPilot.UnitTests/PaperPilot.UnitTests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <UserSecretsId>dotnet-PaperPilot.MigrationService-9883271a-36ae-4e8c-8b69-0b9653e476c0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
+    <ProjectReference Include="../PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

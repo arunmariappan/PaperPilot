@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../PaperPilot.Core/PaperPilot.Core.csproj" />
+    <ProjectReference Include="../PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

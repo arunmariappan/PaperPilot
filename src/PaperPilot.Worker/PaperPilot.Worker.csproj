@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="../PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
+    <ProjectReference Include="../PaperPilot.Core/PaperPilot.Core.csproj" />
+    <ProjectReference Include="../PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
+    <ProjectReference Include="../PaperPilot.Ingestion/PaperPilot.Ingestion.csproj" />
+  </ItemGroup>
+
+</Project>
