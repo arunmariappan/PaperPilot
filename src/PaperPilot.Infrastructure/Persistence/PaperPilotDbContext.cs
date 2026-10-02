@@ -8,6 +8,8 @@ public sealed class PaperPilotDbContext(DbContextOptions<PaperPilotDbContext> op
 {
     public DbSet<Paper> Papers => Set<Paper>();
 
+    public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaperPilotDbContext).Assembly);
 

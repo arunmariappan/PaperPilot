@@ -118,7 +118,17 @@ public sealed class PaperRepository(PaperPilotDbContext db, TimeProvider timePro
                 new Dictionary<string, string> { ["note"] = ParseFailedNote });
         }
 
-        await db.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException)
+        {
+            // Don't let one failed paper poison the next save in the same scope.
+            db.ChangeTracker.Clear();
+            throw;
+        }
+
         return paper;
     }
 }

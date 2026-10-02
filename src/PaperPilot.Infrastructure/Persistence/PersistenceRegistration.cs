@@ -13,7 +13,7 @@ public static class PersistenceRegistration
 
     /// <summary>
     /// Registers a pooled <see cref="PaperPilotDbContext"/> on the <c>papers</c> connection, enriched by Aspire
-    /// (retries, health check, tracing), and <see cref="PaperRepository"/>.
+    /// (retries, health check, tracing), <see cref="PaperRepository"/> and <see cref="IngestionRunRepository"/>.
     /// </summary>
     public static IHostApplicationBuilder AddPaperPilotDatabase(this IHostApplicationBuilder builder)
     {
@@ -33,6 +33,7 @@ public static class PersistenceRegistration
         builder.EnrichNpgsqlDbContext<PaperPilotDbContext>();
 
         builder.Services.AddScoped<PaperRepository>();
+        builder.Services.AddScoped<IngestionRunRepository>();
 
         return builder;
     }
