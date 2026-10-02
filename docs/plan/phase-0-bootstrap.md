@@ -157,4 +157,4 @@ builder.Build().Run();
 - [x] `curl http://localhost:9210/_cluster/health` returns green or yellow, and `http://localhost:5011/docs` shows the docling-serve API.
 - [x] `docker stats` shows total container memory below about 5 GB without Langfuse. Write down the actual number in `CLAUDE.md`. *(2.05 GiB idle; 3.9 GiB with Langfuse.)*
 - [x] The R1 spike pattern is written down.
-- [ ] CI is green on `main`.
+- [x] CI is green on `main`.
