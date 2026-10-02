@@ -13,7 +13,8 @@ namespace PaperPilot.IntegrationTests.Persistence;
 /// at a time, so they never share an index or table concurrently.
 /// </summary>
 [CollectionDefinition(Name)]
-public sealed class ContainersCollectionDefinition : ICollectionFixture<PostgresFixture>, ICollectionFixture<Search.OpenSearchFixture>
+public sealed class ContainersCollectionDefinition
+    : ICollectionFixture<PostgresFixture>, ICollectionFixture<Search.OpenSearchFixture>, ICollectionFixture<Caching.RedisFixture>
 {
     public const string Name = "Containers";
 }
