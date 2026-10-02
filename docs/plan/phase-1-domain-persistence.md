@@ -42,7 +42,7 @@ Records, snake_case on the wire through `JsonNamingPolicy.SnakeCaseLower`:
 ## As built
 
 - **String lists are `text[]`, not `jsonb`.** Npgsql maps `List<string>` to native arrays, and forcing `jsonb` onto a CLR type with `HasColumnType` is deprecated in Npgsql 10. Arrays are also the better Postgres type for `categories` filters. Sections keep lowercase JSON keys (`title`, `content`, `level`), as in the Python table.
-- **Contracts are records with `init` properties**, so DataAnnotations sit on properties where both `Validator` and .NET 10 minimal-API validation read them. Whether minimal-API validation covers types from `PaperPilot.Core` is checked with the first endpoint in phase 2.
+- **Contracts are records with `init` properties**, so DataAnnotations sit on properties where both `Validator` and .NET 10 minimal-API validation read them. Phase 2 confirmed that minimal-API validation covers types from `PaperPilot.Core`.
 - **Options:** `Jina:BaseUrl` and `Jina:Model` are new (Python hard-coded them; WireMock tests need the URL). `Langfuse:Enabled` defaults to `false`, because the AppHost turns it on along with the Langfuse stack. Python's `opensearch.max_text_size` is not ported: nothing read it.
 - **`PaperUpsert(ArxivPaper Metadata, PdfContent? Content)`** is the repository's upsert input; `Content == null` means the PDF was skipped or failed.
 - **The migration service** sets exit code 1 when a migration fails, so Aspire's `WaitForCompletion` doesn't start Api and Worker on an unmigrated database.

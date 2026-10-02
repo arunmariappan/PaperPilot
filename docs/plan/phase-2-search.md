@@ -22,15 +22,15 @@ From `services/opensearch/*` and `routers/hybrid_search.py`:
 ## Tasks
 
 ### 2.1 Parity fixtures (in the Python repo)
-- [ ] Add `scripts/dump_parity_fixtures.py` to the Python repo. It writes JSON for:
+- [x] Add `scripts/dump_parity_fixtures.py` to the Python repo. It writes JSON for:
   - `QueryBuilder(...).build()` over a matrix of cases: query blank or present, categories none or `["cs.AI","cs.LG"]`, latest true or false, size/from variations.
   - The hybrid body from `_search_hybrid_native` (patch `client.search` to capture the body, using a 4-dimensional fake vector).
   - `ARXIV_PAPERS_CHUNKS_MAPPING` and `HYBRID_RRF_PIPELINE`.
-- [ ] Copy the output to PaperPilot `tests/fixtures/python-parity/search/`. Phase 4 adds chunker and arXiv fixtures with the same script.
+- [x] Copy the output to PaperPilot `tests/fixtures/python-parity/search/`. Phase 4 adds chunker and arXiv fixtures with the same script.
 
 ### 2.2 `QueryBuilder` (`PaperPilot.Core/Search`)
-- [ ] A pure static builder that returns `JsonObject`: `BuildBm25(SearchQuery)` and `BuildHybrid(SearchQuery, float[] embedding, int multiplier)`.
-- [ ] Golden tests: for every fixture, `JsonNode.DeepEquals(expected, actual)`.
+- [x] A pure static builder that returns `JsonObject`: `BuildBm25(SearchQuery)` and `BuildHybrid(SearchQuery, float[] embedding, int multiplier)`.
+- [x] Golden tests: for every fixture, `JsonNode.DeepEquals(expected, actual)`.
 
 ### 2.3 `OpenSearchClient` (`PaperPilot.Infrastructure/Search`)
 A typed `HttpClient` with base address `OpenSearch:Host`. It uses the standard resilience handler with a 2-minute total timeout for bulk calls. See R1 for how to override it.
@@ -47,40 +47,52 @@ A typed `HttpClient` with base address `OpenSearch:Host`. It uses the standard r
 | `GetChunksByPaperAsync(arxivId)` | `term` query, size 1000, sort `chunk_index` asc | |
 | `CountAsync`, `CountUniquePapersAsync` | `GET /{index}/_count`, cardinality agg on `arxiv_id` | used by health and the ingestion report |
 
-- [ ] `ChunkHit` holds `ChunkId` (`_id`), `ArxivId`, `Title`, `Authors`, `Abstract`, `PublishedDate`, `ChunkText`, `ChunkIndex`, `SectionTitle`, `Score`, `Highlights`.
-- [ ] Throw `SearchUnavailableException` for connection or health failures and `SearchQueryException` (carrying OpenSearch's `error.reason`) for 4xx/5xx responses.
+- [x] `ChunkHit` holds `ChunkId` (`_id`), `ArxivId`, `Title`, `Authors`, `Abstract`, `PublishedDate`, `ChunkText`, `ChunkIndex`, `SectionTitle`, `Score`, `Highlights`.
+- [x] Throw `SearchUnavailableException` for connection or health failures and `SearchQueryException` (carrying OpenSearch's `error.reason`) for 4xx/5xx responses.
 
 ### 2.4 Index bootstrap
-- [ ] `SearchIndexInitializer : IHostedService` in both **Api** and **Worker**: health check, `EnsureIndexAsync(force: false)`, `EnsureRrfPipelineAsync(force: false)`, then log the document count. If OpenSearch is down, log a warning and keep running, as Python's lifespan did.
+- [x] `SearchIndexInitializer : IHostedService` in both **Api** and **Worker**: health check, `EnsureIndexAsync(force: false)`, `EnsureRrfPipelineAsync(force: false)`, then log the document count. If OpenSearch is down, log a warning and keep running, as Python's lifespan did.
 
 ### 2.5 Jina embeddings (`PaperPilot.Infrastructure/Embeddings`)
-- [ ] `IEmbeddingService` with `EmbedQueryAsync(string)` → `float[]` and `EmbedPassagesAsync(IReadOnlyList<string>, int batchSize = 50)` → `IReadOnlyList<float[]>`.
-- [ ] Request body exactly as Python: `{ model: "jina-embeddings-v3", task: "retrieval.query" | "retrieval.passage", dimensions: 1024, late_chunking: false, embedding_type: "float", input: [...] }`, sent as a bearer-token `POST https://api.jina.ai/v1/embeddings`.
-- [ ] **429 handling:** two named clients, `jina-query` and `jina-passages`, each with **its own** resilience handler and the standard handler removed (R1). Retry only on 429, honour `Retry-After`, otherwise exponential 5 s → 10 s → 20 s … capped at 60 s. Max retries: **2** for queries (interactive, BM25 fallback exists) and **6** for passages. The total timeout must cover the full back-off (about 5 minutes for passages).
-- [ ] A missing `Jina:ApiKey` throws `EmbeddingUnavailableException` immediately. Callers fall back (query) or fail the paper (passages).
-- [ ] Check that the number of returned vectors matches the number of inputs, and that each has `VectorDimension` floats.
+- [x] `IEmbeddingService` with `EmbedQueryAsync(string)` → `float[]` and `EmbedPassagesAsync(IReadOnlyList<string>, int batchSize = 50)` → `IReadOnlyList<float[]>`.
+- [x] Request body exactly as Python: `{ model: "jina-embeddings-v3", task: "retrieval.query" | "retrieval.passage", dimensions: 1024, late_chunking: false, embedding_type: "float", input: [...] }`, sent as a bearer-token `POST https://api.jina.ai/v1/embeddings`.
+- [x] **429 handling:** two named clients, `jina-query` and `jina-passages`, each with **its own** resilience handler and the standard handler removed (R1). Retry only on 429, honour `Retry-After`, otherwise exponential 5 s → 10 s → 20 s … capped at 60 s. Max retries: **2** for queries (interactive, BM25 fallback exists) and **6** for passages. The total timeout must cover the full back-off (about 5 minutes for passages).
+- [x] A missing `Jina:ApiKey` throws `EmbeddingUnavailableException` immediately. Callers fall back (query) or fail the paper (passages).
+- [x] Check that the number of returned vectors matches the number of inputs, and that each has `VectorDimension` floats.
 
 ### 2.6 `/api/v1/hybrid-search/` (`Api/Endpoints/SearchEndpoints.cs`)
-- [ ] `POST`, `HybridSearchRequest` → `SearchResponse`. Order: health (503) → optional embed with BM25 fallback → `SearchAsync` → map hits.
-- [ ] Hit mapping (**B7**): `section_name = SectionTitle`, `pdf_url = ArxivId.ToPdfUrl(ArxivId)`, `authors` is the comma-joined string as stored.
-- [ ] Errors: `SearchUnavailableException` → 503, `SearchQueryException` → 500 with detail. Validation → 400 (C1).
-- [ ] ASP.NET routing accepts both `/hybrid-search` and `/hybrid-search/`. Add a test for both.
+- [x] `POST`, `HybridSearchRequest` → `SearchResponse`. Order: health (503) → optional embed with BM25 fallback → `SearchAsync` → map hits.
+- [x] Hit mapping (**B7**): `section_name = SectionTitle`, `pdf_url = ArxivId.ToPdfUrl(ArxivId)`, `authors` is the comma-joined string as stored.
+- [x] Errors: `SearchUnavailableException` → 503, `SearchQueryException` → 500 with detail. Validation → 400 (C1).
+- [x] ASP.NET routing accepts both `/hybrid-search` and `/hybrid-search/`. Add a test for both.
 
 ### 2.7 `/api/v1/health`
-- [ ] `IHealthCheck` implementations: `PostgresHealthCheck` (`SELECT 1` through `DbContext`), `OpenSearchHealthCheck` (message `Index 'arxiv-papers-chunks' with N documents`), `OllamaHealthCheck` (`GET {endpoint}/api/version`, message `Ollama service is running`). Tag them `api`.
-- [ ] Register them for the Aspire `/health` endpoint too, so the dashboard shows real dependency health.
-- [ ] `/api/v1/health` runs the `api`-tagged checks and maps the report to the Python shape `{ status: ok|degraded, version, environment, service_name, services: { database, opensearch, ollama: { status: healthy|unhealthy, message } } }`. It always returns 200, as Python did.
+- [x] `IHealthCheck` implementations: `PostgresHealthCheck` (`SELECT 1` through `DbContext`), `OpenSearchHealthCheck` (message `Index 'arxiv-papers-chunks' with N documents`), `OllamaHealthCheck` (`GET {endpoint}/api/version`, message `Ollama service is running`). Tag them `api`.
+- [x] Register them for the Aspire `/health` endpoint too, so the dashboard shows real dependency health.
+- [x] `/api/v1/health` runs the `api`-tagged checks and maps the report to the Python shape `{ status: ok|degraded, version, environment, service_name, services: { database, opensearch, ollama: { status: healthy|unhealthy, message } } }`. It always returns 200, as Python did.
 
 ### 2.8 Seed tool (N4)
-- [ ] `tools/seed-opensearch.cs`, a .NET 10 file-based app (`dotnet run tools/seed-opensearch.cs -- --source http://localhost:9200 --target http://localhost:9210`). It scroll-reads `arxiv-papers-chunks` from the Python stack **including `embedding`** and bulk-writes into PaperPilot with `_id = {arxiv_id}:{chunk_index}`.
-- [ ] Usage note for `CLAUDE.md`: start **only** the Python OpenSearch (`docker compose up -d opensearch` in the Python repo), seed, then stop it.
+- [x] `tools/seed-opensearch.cs`, a .NET 10 file-based app (`dotnet run tools/seed-opensearch.cs -- --source http://localhost:9200 --target http://localhost:9210`). It scroll-reads `arxiv-papers-chunks` from the Python stack **including `embedding`** and bulk-writes into PaperPilot with `_id = {arxiv_id}:{chunk_index}`.
+- [x] Usage note for `CLAUDE.md`: start **only** the Python OpenSearch (`docker compose up -d opensearch` in the Python repo), seed, then stop it.
+
+## As built
+
+- **Parity result.** Running the Python search code against PaperPilot's seeded cluster gives the same hits *and scores* as PaperPilot's API for all five queries, BM25 and hybrid. Against the Python stack's own index, BM25 totals match but scores and the order of near-ties differ: that index still counts 244 deleted chunks (from earlier re-ingestion) in its term statistics. Phase 8 must either run `POST /arxiv-papers-chunks/_forcemerge?only_expunge_deletes=true` on the Python index first, or compare as above.
+- **Fixture script:** `scripts/dump_parity_fixtures.py` in the Python repo (left uncommitted there). It writes 36 BM25 cases (blank, whitespace and text queries; no, some and empty categories; latest on/off; two page sizes), 3 hybrid cases, the mapping and the pipeline.
+- **The resilience helper moved** from ServiceDefaults to `PaperPilot.Infrastructure.Http`, where the HTTP clients are registered. It now also has `ReplaceStandardResilienceHandler` and `WithoutResilience` (for health probes).
+- **OpenSearch client resilience:** standard handler with 2 retries 250 ms apart, 60 s per attempt, 2 min total. On Windows a refused connection takes about 2 s per attempt, so an unreachable cluster becomes a 503 after about 6.5 s (instantly on Linux).
+- **Jina:** every failure (no key, non-429 error, timeout, malformed or short response) surfaces as `EmbeddingUnavailableException`. `dimensions` comes from `OpenSearch:VectorDimension`. Vectors are ordered by the response's `index`.
+- **Validation:** .NET 10 minimal-API validation does cover request types from `PaperPilot.Core`. Error keys are converted to the snake_case wire names (`top_k`, not `TopK`).
+- **Health:** the Ollama check reports `Degraded` on failure, so Aspire doesn't mark the API unhealthy when only Ollama is down; `/api/v1/health` still shows it as `unhealthy`.
+- **API docs:** `/docs` (Scalar) and `/openapi/v1.json` are live from this phase (C11). OpenAPI lists the path as `/api/v1/hybrid-search`.
+- **Seed tool** also sets `chunk_id` on each copied document. It needs `#:property PublishAot=false`, because file-based apps default to AOT analysis and the repo treats warnings as errors.
 
 ## Tests
-- [ ] Unit: QueryBuilder golden fixtures, mapping JSON equals the Python fixture once dimension and space type are filled in, hit mapping (B7), and Jina retry using WireMock (429 + `Retry-After: 1`, then 200, succeeds; three 429s on a query throws after 2 retries; a missing key throws without an HTTP call).
-- [ ] Integration (Testcontainers `opensearchproject/opensearch:2.19.0` with security disabled): `EnsureIndex` and `EnsureRrfPipeline` are idempotent, bulk-indexing 3 chunks with random 1024-dim vectors works, BM25 finds them by keyword, hybrid returns them through the pipeline, and delete-by-query removes them.
-- [ ] API (`WebApplicationFactory` + the container): 200 with the right shape, 400 on an empty query, 503 when OpenSearch is unreachable, trailing slash accepted, and `/api/v1/health` shape.
+- [x] Unit: QueryBuilder golden fixtures, mapping JSON equals the Python fixture once dimension and space type are filled in, hit mapping (B7), and Jina retry using WireMock (429 + `Retry-After: 1`, then 200, succeeds; three 429s on a query throws after 2 retries; a missing key throws without an HTTP call).
+- [x] Integration (Testcontainers `opensearchproject/opensearch:2.19.0` with security disabled): `EnsureIndex` and `EnsureRrfPipeline` are idempotent, bulk-indexing 3 chunks with random 1024-dim vectors works, BM25 finds them by keyword, hybrid returns them through the pipeline, and delete-by-query removes them.
+- [x] API (`WebApplicationFactory` + the container): 200 with the right shape, 400 on an empty query, 503 when OpenSearch is unreachable, trailing slash accepted, and `/api/v1/health` shape.
 
 ## Done when
-- [ ] The index has been seeded from the Python stack, and `GET localhost:9210/arxiv-papers-chunks/_count` matches the Python index.
-- [ ] For 5 fixed queries with `use_hybrid: false`, PaperPilot and Python `/hybrid-search/` return the same `(arxiv_id, chunk_index)` sequence. With `use_hybrid: true`, `search_mode` is `hybrid` and the top results overlap substantially.
-- [ ] `GET localhost:8100/api/v1/health` reports database, opensearch and ollama as healthy.
+- [x] The index has been seeded from the Python stack, and `GET localhost:9210/arxiv-papers-chunks/_count` matches the Python index.
+- [x] For 5 fixed queries with `use_hybrid: false`, PaperPilot and Python `/hybrid-search/` return the same `(arxiv_id, chunk_index)` sequence. With `use_hybrid: true`, `search_mode` is `hybrid` and the top results overlap substantially.
+- [x] `GET localhost:8100/api/v1/health` reports database, opensearch and ollama as healthy.

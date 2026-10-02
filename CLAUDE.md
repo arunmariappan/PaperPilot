@@ -11,6 +11,8 @@ dotnet build                                      # warnings are errors
 dotnet test --project tests/PaperPilot.UnitTests  # Microsoft.Testing.Platform (global.json), not VSTest
 dotnet format --verify-no-changes                 # CI runs this
 dotnet test --project tests/PaperPilot.IntegrationTests   # needs Docker (Testcontainers, postgres:18.3)
+dotnet run tools/seed-opensearch.cs -- --source http://localhost:9200 --target http://localhost:9210
+                                                  # copy the Python stack's chunk index (start PaperPilot first)
 dotnet tool restore                               # dotnet-ef, pinned in dotnet-tools.json
 dotnet ef migrations add <Name> --project src/PaperPilot.Infrastructure   --startup-project src/PaperPilot.MigrationService --output-dir Persistence/Migrations
 dotnet run --project src/PaperPilot.AppHost       # whole stack in the foreground; or `aspire run`
@@ -38,7 +40,7 @@ ServiceDefaults ← every host
 | Resource | Port | Notes |
 |---|---|---|
 | Aspire dashboard | 17205 | login URL is printed at startup |
-| `api` | 8100 | `/api/v1/*` |
+| `api` | 8100 | `/api/v1/*`, API docs at `/docs`, OpenAPI at `/openapi/v1.json` |
 | `web` | 8101 | Blazor UI |
 | `worker` | 8102 | Hangfire dashboard at `/hangfire` (phase 4) |
 | `postgres` | 5442 | persistent container, volume `paperpilot-postgres-data` |
@@ -53,7 +55,7 @@ ServiceDefaults ← every host
 
 - **Resilience (plan R1).** `AddServiceDefaults` puts the standard resilience handler on every `HttpClient`
   (10 s per attempt, ~30 s total). Clients whose calls take minutes must use
-  `AddLongRunningResilienceHandler(name, totalTimeout, pipeline => …)` from ServiceDefaults: it removes the
+  `AddLongRunningResilienceHandler(name, totalTimeout, pipeline => …)` from `PaperPilot.Infrastructure.Http`: it removes the
   standard handler (`RemoveAllResilienceHandlers`, experimental `EXTEXP0001`), sets `HttpClient.Timeout` to
   infinite (its 100 s default applies on top of any pipeline), and adds a pipeline whose outermost strategy is the
   total timeout. Strategies added in `configure` run inside it. `ServiceDefaults/LongRunningResilienceTests` proves
@@ -80,6 +82,16 @@ ServiceDefaults ← every host
 - **Langfuse** (v3.225 when first run) initialises headlessly: org `paperpilot-org`, project `paperpilot`, user
   `admin@example.com`, password in user secrets as `Parameters:langfuse-admin-password`. Session containers reach the
   persistent Postgres over the container network, so `DATABASE_URL` comes from `UriExpression`.
+- **Search.** `OpenSearchClient` throws `SearchUnavailableException` (→ 503) or `SearchQueryException` (→ 500) instead
+  of returning empty results (B6). Golden tests compare `QueryBuilder` with JSON recorded from the Python code
+  (`tests/fixtures/python-parity`, written by `scripts/dump_parity_fixtures.py` in the Python repo).
+- **Seeding and parity.** To seed, start only the Python OpenSearch (`docker compose up -d opensearch` in the Python
+  repo), start PaperPilot (the API creates the index), run the seed tool, then `docker compose stop`. The Python
+  index keeps deleted chunks in its BM25 statistics, so compare against it only after
+  `POST /arxiv-papers-chunks/_forcemerge?only_expunge_deletes=true`, or run the Python code against port 9210.
+- **Testcontainers:** an HTTP wait strategy's `ForPath` must not contain a query string (it never matches); the
+  OpenSearch fixture waits on `/_cluster/health` and then polls for green/yellow. Container tests share one xUnit
+  collection (`Containers`), so they run sequentially against one Postgres and one OpenSearch.
 - **Known log noise:** at startup the AppHost may log one `crit` from `DcpExecutor` ("Watch task over Kubernetes
   ContainerExec resources terminated unexpectedly", a 1-minute timeout). Resources are unaffected.
 

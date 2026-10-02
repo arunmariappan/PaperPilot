@@ -5,7 +5,7 @@ An arXiv CS.AI paper curator built on .NET 10 and Aspire: daily ingestion of new
 
 The design, decisions and roadmap are in [docs/plan/](docs/plan/README.md).
 
-> **Status:** phase 1 (domain and persistence). The infrastructure starts and the `papers` table is migrated; the API has no endpoints yet.
+> **Status:** phase 2 (search). `/api/v1/health` and `/api/v1/hybrid-search/` work; question answering comes next.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ The Aspire dashboard opens at <https://localhost:17205> (the login link is print
 
 | What | URL |
 |---|---|
-| API | <http://localhost:8100> |
+| API docs | <http://localhost:8100/docs> |
 | Web UI | <http://localhost:8101> |
 | Worker | <http://localhost:8102> |
 | OpenSearch | <http://localhost:9210> |

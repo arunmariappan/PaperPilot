@@ -45,7 +45,7 @@ Each item names the Python location and the phase that handles it.
 
 | ID | Change | Why |
 |---|---|---|
-| C1 | Request validation errors return **400** `ProblemDetails`. FastAPI returned **422** with its own error shape. | The .NET 10 built-in minimal-API validation default. No client in this project depends on 422. |
+| C1 | Request validation errors return **400** `ProblemDetails`, with `errors` keyed by the snake_case field name (`{"errors": {"query": [...]}}`). FastAPI returned **422** with its own error shape. | The .NET 10 built-in minimal-API validation default. No client in this project depends on 422. |
 | C2 | `/stream` uses `text/event-stream` (server-sent events) instead of `text/plain`. The `data: {json}` payloads keep the same order and shape: metadata, then `chunk` items, then `{answer, done}`, or `{error}`. | That's the correct media type, and .NET 10 has `TypedResults.ServerSentEvents`. A client that reads `data:` lines still works. |
 | C3 | The LLM is called through the chat API (`IChatClient`, which uses Ollama `/api/chat`), with `rag_system.txt` as the system message and context + question as the user message. Python concatenated everything into one `/api/generate` prompt. | This is how `Microsoft.Extensions.AI` works. The prompt text is the same, but answers may differ slightly. |
 | C4 | The unused structured-output RAG path is dropped (`RAGResponse`, `ResponseParser`, `create_structured_prompt`, `use_structured_output`). | No endpoint ever turned it on. |
