@@ -1,0 +1,70 @@
+# Behaviour changes from the Python version
+
+D8 says PaperPilot **fixes bugs while porting** instead of copying them. This file lists every place where PaperPilot behaves differently from the Python version on purpose, so a parity check (phase 8) can tell an intended difference from a regression.
+
+- **B** = bug in the Python code, fixed in PaperPilot
+- **C** = deliberate change to a contract or behaviour (not a bug)
+- **N** = new capability with no Python equivalent
+
+Each item names the Python location and the phase that handles it.
+
+## B: bugs fixed
+
+| ID | Python behaviour | PaperPilot behaviour | Python location | Phase |
+|---|---|---|---|---|
+| B1 | `/ask-agentic` always returns `sources: []`. `relevant_sources` is never filled in, and `_extract_sources` returns dicts for a `List[str]` field. | `sources` lists the de-duplicated PDF URLs of the chunks used to generate the answer. | `services/agents/agentic_rag.py` `_extract_sources`, `state.relevant_sources` | 5 |
+| B2 | `/ask-agentic` ignores the request's `top_k`, `use_hybrid` and `model` (only `query` is passed on), but echoes `chunks_used = request.top_k` and `search_mode` from the request anyway. | The request values are applied. `chunks_used` is the number of chunks actually retrieved, and `search_mode` is the mode actually used (BM25 if embedding failed). | `routers/agentic_ask.py` | 5 |
+| B3 | The agent's `retrieve_papers` tool always calls Jina. If that fails, LangGraph's `ToolNode` turns the exception into tool-message text, and the grader then grades the error text. | Falls back to BM25 the same way `/ask` does, and records the fallback on the span. | `services/agents/tools.py` | 5 |
+| B4 | The grading and answer prompts get `str(list[Document])` as context, i.e. a Python repr full of `page_content=` and `metadata={...}`. | Context is formatted as numbered excerpts, `[n] arXiv:{id} — {title}\n{chunk_text}`, matching the classic RAG prompt style. | `nodes/utils.py` `get_latest_context` + LangGraph `ToolNode` | 5 |
+| B5 | After the second failed grading, the graph still makes a rewrite LLM call before `retrieve` notices that `max_retrieval_attempts` has been reached and returns the fallback. | The grading step routes straight to the fallback once attempts are used up. One LLM call fewer, which is a few seconds on the local GPU. | `agentic_rag.py` edges, `nodes/retrieve_node.py` | 5 |
+| B6 | `search_unified` catches every exception and returns `{"total": 0, "hits": []}`, so an OpenSearch outage looks like "no results". | The client throws. `/hybrid-search/` and `/ask` return 503 (unavailable) or 500 (query error) with a detail message. `/stream` sends an `{error}` event. The agent ends with an explicit "search is unavailable" answer, and Telegram replies with a friendly error. None of them say "no relevant papers" when search itself failed. | `services/opensearch/client.py` | 2, 3, 5, 6 |
+| B7 | `SearchHit.section_name` and `SearchHit.pdf_url` are always `null`. The index stores `section_title` and has no `pdf_url` field. | `section_name` is mapped from `section_title`, and `pdf_url` is derived from `arxiv_id`. | `routers/hybrid_search.py`, `agents/tools.py` | 2 |
+| B8 | Version stripping uses `arxiv_id.split("v")[0]`, which breaks any ID containing a `v` (e.g. `solv-int/9901001v1` becomes `sol`). The agent tool also builds versioned PDF URLs while `/ask` builds unversioned ones. | One helper, `ArxivId.StripVersion()` (regex `v\d+$`) plus `ArxivId.ToPdfUrl()` / `ToAbsUrl()`, used everywhere. | `routers/ask.py`, `ollama/client.py`, `telegram/bot.py`, `agents/tools.py`, `arxiv/client.py` | 1 |
+| B9 | `TextChunker.chunk_text` raises `TypeError` for texts under `min_chunk_size` words: `_reconstruct_text(words, text)` is called with 2 arguments but takes 1. | Returns a single chunk, as the code intended. | `services/indexing/text_chunker.py` | 4 |
+| B10 | When merging small sections into the previous chunk, the text gets a literal backslash-n (`"\\n\\n"`) instead of newlines. | Real `"\n\n"`. | `text_chunker.py` `_create_combined_chunk` | 4 |
+| B11 | Several settings are ignored: section thresholds 100/800 are hard-coded, `CHUNKING__SECTION_BASED` is never read, `hybrid_search_size_multiplier` is unused (`size * 2` is hard-coded), and `vector_dimension`/`vector_space_type` don't reach the mapping (1024/cosinesimil are hard-coded). | All of them come from options. The defaults are unchanged, so output is identical unless you change the config. | `text_chunker.py`, `opensearch/client.py`, `index_config_hybrid.py` | 2, 4 |
+| B12 | The RRF pipeline "exists?" check calls the *ingest* pipeline API, so it always says missing and the search pipeline is re-`PUT` on every startup. | `GET /_search/pipeline/{id}`, and create only when it's missing (or when forced). | `opensearch/client.py` `_create_rrf_pipeline` | 2 |
+| B13 | The index task picks "the newest N papers by `created_at`", where N = `papers_stored`. Re-fetched papers are upserted without changing `created_at`, so the wrong papers get indexed. | The fetch step returns the exact list of upserted paper IDs, and the index step indexes exactly those. | `airflow/dags/arxiv_ingestion/indexing.py` | 4 |
+| B14 | The cleanup task deletes `/tmp/*.pdf`, but PDFs are cached in `ARXIV__PDF_CACHE_DIR`, so nothing is ever cleaned up. | Deletes files older than 30 days from `Arxiv:PdfCacheDir`. | `arxiv_paper_ingestion.py` `cleanup_task` | 4 |
+| B15 | Ingestion reports **success** even when every PDF failed. You have to read `pdfs_parsed` and `errors` in the logs to notice. | Each run writes an `ingestion_runs` row. The job **fails** (and Hangfire shows it red) when papers were fetched but none were parsed, or when nothing got indexed. | DAG tasks | 4 |
+| B16 | `/feedback` returns **500** "Failed to submit feedback" when Langfuse is disabled, because the tracer object always exists. | Returns **503** "Langfuse tracing is disabled". | `routers/agentic_ask.py` | 3 |
+| B17 | `/stream` replays a cached answer with `answer.split()`, which drops newlines and Markdown structure. | Replays the cached answer in fixed-size slices, keeping whitespace intact. | `routers/ask.py` | 3 |
+| B18 | `RAGTracer` ends spans twice, and `LangfuseTracer.start_span` / `start_generation` call the removed v2 API. | Not applicable: tracing uses OpenTelemetry `Activity`, whose `using` scope ends each span exactly once. | `services/langfuse/*` | 3 |
+| B19 | Telegram answers over 4096 characters fail. Markdown parse errors fall back to plain text, but long messages still fail. | Long answers are split at paragraph boundaries into chunks of at most 4096 characters. The plain-text fallback is kept. | `services/telegram/bot.py` | 6 |
+| B20 | API router tests accept `status_code in [200, 500, 503]`, so a broken endpoint still passes. | Tests assert exact status codes and response shapes. | `tests/api/routers/*` | 2+ |
+| B21 | `published_date`, `created_at` etc. are stored as naive `timestamp`. | `timestamptz`, always UTC. | `models/paper.py` | 1 |
+| B22 | No migrations (`Base.metadata.create_all`), so model changes never reach existing tables. | EF Core migrations, applied by `PaperPilot.MigrationService`. | `db/interfaces/postgresql.py` | 1 |
+| B23 | Re-fetching a paper whose PDF parse fails this time sets `pdf_processed=False` (an explicitly set field in `model_dump(exclude_unset=True)`) but leaves the old `raw_text`. The row then claims to be unprocessed while still holding content. | A failed re-parse never downgrades a paper that was parsed before. Metadata is updated, and parsed content plus `pdf_processed` are only written when the new parse succeeds. | `metadata_fetcher.py` `_store_papers_to_db`, `repositories/paper.py` `upsert` | 1, 4 |
+| B24 | `/ask` and `/stream` report `search_mode: "hybrid"` whenever `use_hybrid` was requested, even when Jina failed and BM25 actually ran. | `search_mode` reports the mode actually used. | `routers/ask.py` | 3 |
+| B25 | The fetch task targets `execution_date - 1 day`. Airflow's `execution_date` is the *logical* date (the previous schedule slot), so scheduled runs fetch papers from **two** days back, and Friday and Saturday submissions are never fetched. | The target is "yesterday" relative to the actual run time (UTC). The window starts the day after the last successful run's target date (capped at 3 days), so Monday covers Fri–Sun. Explicit dates override it. | `airflow/dags/arxiv_ingestion/fetching.py` | 4 |
+| B26 | arXiv rate limiting is per call. Five concurrent downloads each sleep 3 s and then all hit arXiv at once, which breaks arXiv's one-request-per-3-seconds guideline. | One shared rate limiter (one request start every 3 s) for all arXiv API and PDF traffic. | `services/arxiv/client.py` `_download_with_retry` | 4 |
+| B27 | After a rewrite, grading and answer generation use the **rewritten** query as "User Question" (`get_latest_query` returns the newest `HumanMessage`), so the user gets an answer to a question they didn't ask. | Grading and generation use the original question. Retrieval still uses the rewritten query. | `nodes/utils.py`, `grade_documents_node.py`, `generate_answer_node.py` | 5 |
+| B28 | `reasoning_steps` always ends with "Generated answer from context", even for out-of-scope and max-attempts endings. | The last step describes the actual ending: `Responded as out of scope`, `Stopped after {n} retrieval attempts`, `Search was unavailable`, or `Generated answer from context`. | `agentic_rag.py` `_extract_reasoning_steps` | 5 |
+
+## C: deliberate changes
+
+| ID | Change | Why |
+|---|---|---|
+| C1 | Request validation errors return **400** `ProblemDetails`. FastAPI returned **422** with its own error shape. | The .NET 10 built-in minimal-API validation default. No client in this project depends on 422. |
+| C2 | `/stream` uses `text/event-stream` (server-sent events) instead of `text/plain`. The `data: {json}` payloads keep the same order and shape: metadata, then `chunk` items, then `{answer, done}`, or `{error}`. | That's the correct media type, and .NET 10 has `TypedResults.ServerSentEvents`. A client that reads `data:` lines still works. |
+| C3 | The LLM is called through the chat API (`IChatClient`, which uses Ollama `/api/chat`), with `rag_system.txt` as the system message and context + question as the user message. Python concatenated everything into one `/api/generate` prompt. | This is how `Microsoft.Extensions.AI` works. The prompt text is the same, but answers may differ slightly. |
+| C4 | The unused structured-output RAG path is dropped (`RAGResponse`, `ResponseParser`, `create_structured_prompt`, `use_structured_output`). | No endpoint ever turned it on. |
+| C5 | Chunk documents get a deterministic `_id` = `{arxiv_id}:{chunk_index}`, and the mapped-but-never-set fields `chunk_id`, `created_at` and `updated_at` are filled in. | Re-indexing becomes idempotent, and the mapping and data finally agree. Delete-by-query before re-indexing is kept for papers whose chunk count shrinks. |
+| C6 | The cache key prefix is `paperpilot:ask:` (still sha256 of the canonical request, first 16 hex characters). | Separate stack. No compatibility with the Python cache is needed. |
+| C7 | Configuration names are .NET style (README §5). | The binder can't map `INDEX_NAME` to `IndexName`. |
+| C8 | `trace_id` is the 32-hex W3C OpenTelemetry trace id, which Langfuse uses for OTel-ingested traces. | Tracing is OTel-native, with no Langfuse SDK. |
+| C9 | Ingestion is **one** Hangfire job with five logged steps instead of five Airflow tasks with XCom. Retry delay is 5 min (Airflow's was 30), and concurrent runs are blocked. | A simpler mental model. The 30-minute `restarting` limbo is gone. |
+| C10 | The agent calls retrieval directly instead of emitting a synthetic `AIMessage` tool call and routing through `ToolNode`/`tools_condition`. The `reasoning_steps` strings stay word-for-word. | No LLM ever chose the tool, so the indirection added nothing. |
+| C11 | API docs are at `/docs` (Scalar) and OpenAPI at `/openapi/v1.json`. | .NET 10 templates no longer ship Swagger UI. |
+| C12 | The Telegram bot calls the shared `RagService` instead of running its own copy of the RAG pipeline. | One code path. The cache and tracing now apply to Telegram too. |
+| C13 | `/ask`, `/stream` and `/ask-agentic` reject a whitespace-only `query` with **400**. Python's `min_length=1` let `"   "` through to `/ask` and `/stream`, and `/ask-agentic` raised `ValueError` (422). `/hybrid-search/` still accepts it, because a blank query there means "latest papers" (`match_all`). | One rule for every question endpoint; a blank question can't produce a useful answer. |
+
+## N: new capabilities
+
+| ID | Capability | Phase |
+|---|---|---|
+| N1 | `GET /api/v1/models`: lists installed Ollama models for the UI's model dropdown. Gradio used a hard-coded list. | 3 |
+| N2 | `ingestion_runs` table (one row per run, with all counts and errors), plus `GET /ingestion/runs` on the Worker | 4 |
+| N3 | `POST /ingestion/run?from=yyyyMMdd&to=yyyyMMdd` on the Worker, for backfills and manual runs | 4 |
+| N4 | `tools/seed-opensearch.cs` (a .NET 10 file-based app, run with `dotnet run tools/seed-opensearch.cs`): copies chunks, embeddings included, from the Python stack's OpenSearch into PaperPilot's | 2 |
+| N5 | Optional Telegram `/agent <question>` command that uses the agentic workflow | 6 |
