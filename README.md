@@ -5,7 +5,7 @@ An arXiv CS.AI paper curator built on .NET 10 and Aspire: daily ingestion of new
 
 The design, decisions and roadmap are in [docs/plan/](docs/plan/README.md).
 
-> **Status:** phase 0 (bootstrap). The infrastructure starts, and the services are empty.
+> **Status:** phase 1 (domain and persistence). The infrastructure starts and the `papers` table is migrated; the API has no endpoints yet.
 
 ## Prerequisites
 

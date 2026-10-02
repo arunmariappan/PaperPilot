@@ -10,6 +10,9 @@ from the Python version (`B`/`C`/`N` IDs).
 dotnet build                                      # warnings are errors
 dotnet test --project tests/PaperPilot.UnitTests  # Microsoft.Testing.Platform (global.json), not VSTest
 dotnet format --verify-no-changes                 # CI runs this
+dotnet test --project tests/PaperPilot.IntegrationTests   # needs Docker (Testcontainers, postgres:18.3)
+dotnet tool restore                               # dotnet-ef, pinned in dotnet-tools.json
+dotnet ef migrations add <Name> --project src/PaperPilot.Infrastructure   --startup-project src/PaperPilot.MigrationService --output-dir Persistence/Migrations
 dotnet run --project src/PaperPilot.AppHost       # whole stack in the foreground; or `aspire run`
 aspire start --apphost src/PaperPilot.AppHost     # in the background (PowerShell); `aspire describe`, `aspire logs <resource>`
 aspire stop --apphost src/PaperPilot.AppHost
@@ -60,7 +63,14 @@ ServiceDefaults ← every host
   .NET tool on this machine, on PowerShell's `PATH` but not Git Bash's.
 - **Redis is TLS.** Aspire 13.6's `AddRedis` serves `rediss://` on the pinned port 6390 and plain TCP on a second,
   random port. `WithReference(redis)` hands clients a TLS connection string, so this only matters for manual tools.
-- **Postgres 18.** Aspire 13.6 runs `postgres:18.x`.
+- **Postgres 18.** Aspire 13.6 runs `postgres:18.x`. To inspect it without handling the password:
+  `docker exec <postgres-container> sh -c 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U postgres -d papers -c "\d papers"'`.
+- **Persistence.** `AddPaperPilotDatabase()` registers a pooled `PaperPilotDbContext` (snake_case naming, timestamp
+  interceptor) and Aspire's enrichment (retries, health check, tracing). Npgsql only writes `DateTimeOffset` with
+  offset 0, so convert to UTC before saving (the repository does this for `PublishedDate`). String lists are `text[]`;
+  sections and parser metadata are `jsonb`. `Persistence/Migrations` is marked `generated_code` in `.editorconfig`.
+- **First migration log noise:** on a fresh database, EF logs a failed `SELECT … FROM "__EFMigrationsHistory"` before
+  it creates that table. It's harmless.
 - **Line endings are LF** (`.gitattributes`, `.editorconfig`). Git on this machine has `core.autocrlf=true`, and
   `dotnet format` checks `end_of_line`, so new files from templates or editors may need converting.
 - **docling-serve image** is `ghcr.io/docling-project/docling-serve-cpu:v1.35.0` (CPU only, several GB). The Python

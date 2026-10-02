@@ -175,12 +175,12 @@ Options classes live in `PaperPilot.Core/Options` and bind from `appsettings.jso
 | `OPENSEARCH__INDEX_NAME`, `CHUNK_INDEX_SUFFIX`, `VECTOR_DIMENSION`, `VECTOR_SPACE_TYPE`, `RRF_PIPELINE_NAME`, `HYBRID_SEARCH_SIZE_MULTIPLIER` | `OpenSearch:IndexName`, `ChunkIndexSuffix`, `VectorDimension`, `VectorSpaceType`, `RrfPipelineName`, `HybridSearchSizeMultiplier` | appsettings |
 | `OLLAMA_HOST` | `ConnectionStrings:ollama` = `Endpoint=http://localhost:11434` | AppHost `AddConnectionString("ollama")` |
 | `OLLAMA_MODEL`, `OLLAMA_TIMEOUT`, `OLLAMA_THINK` | `Ollama:Model` (`qwen3.5:9b`), `Ollama:TimeoutSeconds` (300), `Ollama:Think` (false) | appsettings |
-| `JINA_API_KEY` | `Jina:ApiKey` | **secret** AppHost parameter (user-secrets) |
+| `JINA_API_KEY` | `Jina:ApiKey` (+ new `Jina:BaseUrl`, `Jina:Model`) | **secret** AppHost parameter (user-secrets) |
 | `ARXIV__*` | `Arxiv:BaseUrl`, `PdfCacheDir`, `RateLimitDelaySeconds`, `TimeoutSeconds`, `MaxResults`, `SearchCategory`, `DownloadMaxRetries`, `DownloadRetryDelayBaseSeconds`, `MaxConcurrentDownloads`, `MaxConcurrentParsing` | appsettings |
 | `PDF_PARSER__*` | `PdfParser:MaxPages` (30), `MaxFileSizeMb` (20), `DoOcr` (false), `DoTableStructure` (true) | appsettings |
 | (new) | `Docling:BaseUrl`, `Docling:TimeoutSeconds` (600) | Aspire endpoint / appsettings |
 | `CHUNKING__*` | `Chunking:ChunkSize` (600), `OverlapSize` (100), `MinChunkSize` (100), `SectionBased` (true), plus new `SectionMinWords` (100), `SectionMaxWords` (800) | appsettings |
-| `LANGFUSE__PUBLIC_KEY/SECRET_KEY/HOST` | `Langfuse:PublicKey`, `Langfuse:SecretKey`, `Langfuse:BaseUrl`, `Langfuse:Enabled` | **secret** AppHost parameters |
+| `LANGFUSE__PUBLIC_KEY/SECRET_KEY/HOST` | `Langfuse:PublicKey`, `Langfuse:SecretKey`, `Langfuse:BaseUrl`, `Langfuse:Enabled` (default `false`) | **secret** AppHost parameters |
 | `TELEGRAM__BOT_TOKEN/ENABLED` | `Telegram:BotToken`, `Telegram:Enabled` | **secret** AppHost parameter |
 | `APP_VERSION`, `ENVIRONMENT`, `SERVICE_NAME` | `App:Version`, `ASPNETCORE_ENVIRONMENT`, `App:ServiceName` | appsettings |
 
