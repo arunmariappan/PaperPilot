@@ -1,0 +1,81 @@
+[
+  {
+    "name": "default-max-results",
+    "input": {
+      "base_url": "https://export.arxiv.org/api/query",
+      "category": "cs.AI",
+      "from": null,
+      "to": null,
+      "max_results": null,
+      "default_max_results": 15
+    },
+    "expected": "https://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results=15&sortBy=submittedDate&sortOrder=descending"
+  },
+  {
+    "name": "one-day",
+    "input": {
+      "base_url": "https://export.arxiv.org/api/query",
+      "category": "cs.AI",
+      "from": "20261001",
+      "to": "20261001",
+      "max_results": 15,
+      "default_max_results": 15
+    },
+    "expected": "https://export.arxiv.org/api/query?search_query=cat:cs.AI%20AND%20submittedDate:[202610010000+TO+202610012359]&start=0&max_results=15&sortBy=submittedDate&sortOrder=descending"
+  },
+  {
+    "name": "range-capped-at-2000",
+    "input": {
+      "base_url": "https://export.arxiv.org/api/query",
+      "category": "cs.LG",
+      "from": "20260929",
+      "to": "20261001",
+      "max_results": 2500,
+      "default_max_results": 15
+    },
+    "expected": "https://export.arxiv.org/api/query?search_query=cat:cs.LG%20AND%20submittedDate:[202609290000+TO+202610012359]&start=0&max_results=2000&sortBy=submittedDate&sortOrder=descending"
+  },
+  {
+    "name": "from-only",
+    "input": {
+      "base_url": "https://export.arxiv.org/api/query",
+      "category": "cs.AI",
+      "from": "20261001",
+      "to": null,
+      "max_results": 10,
+      "default_max_results": 15
+    },
+    "expected": "https://export.arxiv.org/api/query?search_query=cat:cs.AI%20AND%20submittedDate:[202610010000+TO+%2A]&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+  },
+  {
+    "name": "to-only",
+    "input": {
+      "base_url": "https://export.arxiv.org/api/query",
+      "category": "cs.AI",
+      "from": null,
+      "to": "20261001",
+      "max_results": 10,
+      "default_max_results": 15
+    },
+    "expected": "https://export.arxiv.org/api/query?search_query=cat:cs.AI%20AND%20submittedDate:[%2A+TO+202610012359]&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+  },
+  {
+    "name": "category-needing-encoding",
+    "input": {
+      "base_url": "https://export.arxiv.org/api/query",
+      "category": "cs.AI OR (cs.LG)",
+      "from": "20261001",
+      "to": "20261001",
+      "max_results": 5,
+      "default_max_results": 15
+    },
+    "expected": "https://export.arxiv.org/api/query?search_query=cat:cs.AI%20OR%20%28cs.LG%29%20AND%20submittedDate:[202610010000+TO+202610012359]&start=0&max_results=5&sortBy=submittedDate&sortOrder=descending"
+  },
+  {
+    "name": "by-id",
+    "input": {
+      "id": "2610.00840v1"
+    },
+    "expected": "https://export.arxiv.org/api/query?id_list=2610.00840&max_results=1"
+  }
+]

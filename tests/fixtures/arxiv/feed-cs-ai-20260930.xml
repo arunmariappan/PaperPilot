@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Oh/WmUkW2cuSQuHfeaCIpkDeFng</id>
+  <title>arXiv Query: search_query=cat:cs.AI AND submittedDate:"202609300000 TO 202609302359"&amp;id_list=&amp;start=0&amp;max_results=3</title>
+  <updated>2026-10-02T20:02:56Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=cat:cs.AI+AND+submittedDate:%22202609300000+TO+202609302359%22&amp;start=0&amp;max_results=3&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>
+  <opensearch:totalResults>375</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2610.00840v1</id>
+    <title>Contextual trajectory and incremental contextual displacement: Towards using LLMs to understand dynamic, utterance-specific meaning construction</title>
+    <updated>2026-09-30T23:56:18Z</updated>
+    <link href="https://arxiv.org/abs/2610.00840v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.00840v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Transformer-based large language models (LLMs) such as RoBERTa represent text using contextual word embeddings (CWEs), which alter the embeddings associated with each token based on surrounding context. We construct token-wise incremental trajectories by repeatedly recomputing a token's CWE as successive words are added to a sentence, yielding a representation of how contextualized embeddings evolve as the utterance unfolds. We evaluate this approach using garden-path sentences as a test case with characteristic features. Token-wise trajectories reproduce known features of garden-path processing, including disruption around the critical region, and reliably distinguish garden-path sentences from matched disambiguated controls. We introduce several metrics for quantifying representational displacement across contextual increments and show that trajectory information can be highly predictive of sentence type. We find that ambiguity-related information is recoverable not only from the sentence-level CLS representation but also from ordinary vocabulary tokens, suggesting that utterance-level information is distributed across multiple representational scales. In exploratory analyses, we find qualitatively similar trajectory structures in other ambiguity- and misdirection-related linguistic phenomena. Together, these results establish token-wise incremental trajectories as a promising framework for studying utterance-specific meaning construction using LLMs.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-30T23:56:18Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Grayson Wycliffe Storer</name>
+    </author>
+    <author>
+      <name>Julia Witte Zimmerman</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.00838v1</id>
+    <title>SHARPO: Segment-Level Credit Assignment for Agentic Reinforcement Learning</title>
+    <updated>2026-09-30T23:51:11Z</updated>
+    <link href="https://arxiv.org/abs/2610.00838v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.00838v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Agentic reinforcement learning (RL) trains a large language model (LLM) to act over long, multi-step interactions. However, a single localized error can cause task failure, while trajectory-level rewards provide limited guidance for assigning credit to individual decisions. To address this limitation, we introduce Segment-level Hindsight Advantage Reweighting for Policy Optimization (SHARPO), a credit-assignment mechanism that refines Group Relative Policy Optimization (GRPO) at the level of environment-facing segments. Inspired by the existing on-policy self-distillation (OPSD) method, SHARPO computes teacher-student log-probability gaps within each segment and uses the resulting signal to compute a bounded multiplier on the GRPO advantage. This multiplier is shared by all tokens within the segment, allowing credit to vary across different segments. With Qwen2.5-7B-Instruct, SHARPO outperforms existing baselines on the ALFWorld and WebShop benchmarks, including GRPO, SDAR, RLSD, and StepOPSD.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-30T23:51:11Z</published>
+    <arxiv:comment>13 pages, 3 tables, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xinchen Du</name>
+    </author>
+    <author>
+      <name>Zhengze Zhou</name>
+    </author>
+    <author>
+      <name>Wenhui Zhu</name>
+    </author>
+    <author>
+      <name>Han Yu</name>
+    </author>
+    <author>
+      <name>Sen Na</name>
+    </author>
+    <author>
+      <name>Rohit Jain</name>
+    </author>
+    <author>
+      <name>Alborz Geramifard</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.00834v1</id>
+    <title>Kepler: Auditable World Models for ARC-AGI-3</title>
+    <updated>2026-09-30T23:46:59Z</updated>
+    <link href="https://arxiv.org/abs/2610.00834v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.00834v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>ARC-AGI-3 evaluates agents in interactive environments whose rules and objectives must be inferred from observation. We present Kepler, an open-source harness that represents hypotheses as executable world models and validates them through retrospective transition checks and conditional prediction checks. Under one frozen Claude Opus 5 configuration, Kepler obtained a server-verified 100.00 RHAE on all 25 public games, with no per-game model selection or score-conditioned reruns. On 181 of 183 completed levels, the final Opus attempt used no more actions than the corresponding median-human baseline. The retained board runs used 8,256 environment actions, of which 7,292 occurred in scored levels. Retained local provider-session records yield 858.0 million tokens, 97.37% cache reads, and a \$777.72 cost at September 1, 2026 API list-equivalent rates. We also report three evaluation failures: source-code leakage that produced an invalid perfect run, agents reconstructing a removed harness in a control condition, and autonomous repair masking a broken planner. A single-game observation case study showed that animation frames contained task-relevant information absent from settled text grids. Across the final Claude Opus 5 and GPT-5.6 Sol boards, 48 of 50 game-model cells reached 100. These results indicate that public-set score alone has limited discriminative value and motivate first-attempt, cost-conditioned, and verification-aware reporting.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-30T23:46:59Z</published>
+    <arxiv:comment>17 pages. Accepted to the non-archival Interpreting Agent Behavior workshop at NeurIPS 2026. Project: https://kepler-harness.vercel.app/ . Code and public traces available</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Wensen Wu</name>
+    </author>
+  </entry>
+</feed>
