@@ -21,6 +21,8 @@ aspire stop --apphost src/PaperPilot.AppHost
 aspire otel traces api --apphost src/PaperPilot.AppHost --trace-id <id> --format Json   # a trace from the dashboard
 curl -X POST "localhost:8102/ingestion/run?from=20261001&to=20261001"   # manual ingestion run / backfill (N3)
 curl localhost:8102/ingestion/runs                                       # recent runs (N2)
+curl -X POST localhost:8100/api/v1/ask-agentic -H 'Content-Type: application/json' -d '{"query":"What are transformer architectures?"}'
+                                                  # agentic RAG; minutes on a local GPU (3-4 LLM calls)
 dotnet run tests/fixtures/docling/make-sample-paper.cs                   # regenerate the synthetic Docling fixture PDF
 ```
 
@@ -128,6 +130,9 @@ ServiceDefaults ← every host
     framework's own spans are off unless `WithOpenTelemetry()` is called; they add `workflow.build`,
     `workflow.session`, `workflow_invoke`, `executor.process {id}`, `message.send` and `edge_group.process` (source
     `Microsoft.Agents.AI.Workflows`), several per node, so PaperPilot leaves them off.
+  - The agent lives in `PaperPilot.Rag/Agentic`: one `AgenticRagWorkflow` singleton, stateless executors, and an
+    immutable `AgentRunState`. Test stubs tell its four LLM calls apart by the prompt's first line; match the question on
+    `User Query: …`, because the guardrail prompt's own examples include "What is 2+2?".
 - **Activities in async iterators:** `Activity.Current` resets at every `yield`, so spans started after one lose their
   parent. `RagService.StreamAsync` runs the pipeline in a normal async method that writes to a channel.
 - **WireMock** adds a request to `LogEntries` only after the client already has the response, so assert on it after

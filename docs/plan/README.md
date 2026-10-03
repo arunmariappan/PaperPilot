@@ -17,7 +17,7 @@ PaperPilot is a C# / .NET 10 arXiv CS.AI paper curator with hybrid search, class
 | [phase-7-blazor-ui.md](phase-7-blazor-ui.md) | Blazor chat UI |
 | [phase-8-hardening.md](phase-8-hardening.md) | Parity checks against Python, CI, docs, cleanup |
 
-Last updated 2026-10-03 (D13–D15 added at the start of phase 0; B29–B30 found in phase 3, B31–B34 in phase 4).
+Last updated 2026-10-03 (D13–D15 added at the start of phase 0; B29–B30 found in phase 3, B31–B34 in phase 4, C14 in phase 5).
 
 ---
 

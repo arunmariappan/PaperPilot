@@ -22,7 +22,7 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 | `src/routers/ping.py` | `src/PaperPilot.Api/Endpoints/HealthEndpoints.cs` | Same JSON shape. Checks: database, opensearch, ollama. |
 | `src/routers/hybrid_search.py` | `src/PaperPilot.Api/Endpoints/SearchEndpoints.cs` | `POST /api/v1/hybrid-search/` |
 | `src/routers/ask.py` | `src/PaperPilot.Api/Endpoints/AskEndpoints.cs` → `src/PaperPilot.Rag/RagService.cs` | Endpoints stay thin. Retrieval, prompt, generation and caching live in `RagService`, which Telegram reuses. |
-| `src/routers/agentic_ask.py` | `src/PaperPilot.Api/Endpoints/AgenticEndpoints.cs`, `FeedbackEndpoints.cs` | |
+| `src/routers/agentic_ask.py` | `src/PaperPilot.Api/Endpoints/AgenticAskEndpoints.cs`, `FeedbackEndpoints.cs` | |
 | `src/schemas/api/ask.py`, `search.py`, `health.py` | `src/PaperPilot.Core/Contracts/*.cs` | `record` types with DataAnnotations (`[Range(1,10)]`, `[StringLength(1000, MinimumLength = 1)]`). |
 | (none) | `src/PaperPilot.Api/Endpoints/ModelsEndpoints.cs` | N1 |
 
@@ -50,13 +50,13 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 
 | Python | PaperPilot | Notes |
 |---|---|---|
-| `src/services/agents/agentic_rag.py` | `src/PaperPilot.Rag/Agentic/AgenticRagService.cs`, `AgenticRagWorkflowFactory.cs` | The graph is built with `WorkflowBuilder`. |
+| `src/services/agents/agentic_rag.py` | `src/PaperPilot.Rag/Agentic/AgenticRagService.cs`, `AgenticRagWorkflow.cs` | The graph is built once with `WorkflowBuilder` and run with `InProcessExecution.Concurrent`. |
 | `src/services/agents/state.py` | `src/PaperPilot.Rag/Agentic/AgentRunState.cs` | An immutable record passed between executors. |
-| `src/services/agents/context.py`, `config.py`, `factory.py` | `src/PaperPilot.Rag/Agentic/AgenticRagOptions.cs` + DI | Per-request values (model, top_k, use_hybrid) go into the initial state (B2). |
-| `src/services/agents/models.py` | `src/PaperPilot.Rag/Agentic/Models.cs` | `GuardrailScoring`, `GradeDocuments`, `QueryRewriteOutput`, `GradingResult`, `SourceItem`. |
-| `src/services/agents/prompts.py` | `src/PaperPilot.Rag/Agentic/Prompts/*.txt` (embedded, verbatim) | Only the prompts that are actually used: `GUARDRAIL`, `GRADE_DOCUMENTS`, `REWRITE`, `GENERATE_ANSWER`. `SYSTEM_MESSAGE`, `DECISION_PROMPT` and `DIRECT_RESPONSE_PROMPT` are dropped because nothing uses them. |
+| `src/services/agents/context.py`, `config.py`, `factory.py` | `src/PaperPilot.Core/Options/AgenticRagOptions.cs` + DI | Per-request values (model, top_k, use_hybrid) go into the initial state (B2). |
+| `src/services/agents/models.py` | `src/PaperPilot.Rag/Agentic/AgentModels.cs` | `GuardrailScoring`, `GradeDocuments`, `QueryRewriteOutput`, `GradingResult`. `SourceItem`, `ToolArtefact`, `RoutingDecision` and `ReasoningStep` are dropped: sources are URLs (B1) and routing lives in `AgentRouting`. |
+| `src/services/agents/prompts.py` | `src/PaperPilot.Rag/Prompts/{guardrail,grade_documents,rewrite,generate_answer}.txt` (embedded, verbatim) + `Agentic/AgentPrompts.cs` | Only the prompts that are actually used: `GUARDRAIL`, `GRADE_DOCUMENTS`, `REWRITE`, `GENERATE_ANSWER`. `SYSTEM_MESSAGE`, `DECISION_PROMPT` and `DIRECT_RESPONSE_PROMPT` are dropped because nothing uses them. |
 | `src/services/agents/tools.py` | `src/PaperPilot.Rag/Retrieval/PaperRetriever.cs` | Shared by classic and agentic RAG (B3). |
-| `src/services/agents/nodes/*.py` | `src/PaperPilot.Rag/Agentic/Executors/*Executor.cs` | One executor per node, plus `MaxAttemptsFallbackExecutor` (B5). |
+| `src/services/agents/nodes/*.py` | `src/PaperPilot.Rag/Agentic/Executors/*Executor.cs` | One executor per node, plus `MaxAttemptsExecutor` (B5) and `SearchUnavailableExecutor` (B6). |
 | `src/services/agents/nodes/utils.py` | Dropped | Message-list helpers aren't needed once state is typed. |
 
 ## Ingestion
@@ -91,7 +91,7 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 | `tests/unit/services/test_pdf_parser.py` | `tests/PaperPilot.UnitTests/Pdf/PdfParsingTests.cs` |
 | `tests/unit/services/test_metadata_fetcher.py` | `tests/PaperPilot.IntegrationTests/Ingestion/IngestionJobTests.cs` |
 | `tests/unit/services/test_telegram.py` | `tests/PaperPilot.UnitTests/Telegram/*Tests.cs` |
-| `tests/unit/services/agents/*` (stale: fixtures that don't exist) | `tests/PaperPilot.UnitTests/Agentic/*Tests.cs`, written fresh with a fake `IChatClient` |
+| `tests/unit/services/agents/*` (stale: fixtures that don't exist) | `tests/PaperPilot.UnitTests/Rag/Agentic/*Tests.cs`, written fresh with a scripted `IChatClient` |
 | `tests/unit/test_config.py`, `schemas/test_search.py` | `tests/PaperPilot.UnitTests/Options/*`, `Contracts/*` |
 | `tests/api/routers/*` | `tests/PaperPilot.IntegrationTests/Api/*` (exact status codes, B20) |
 | `tests/integration/test_services.py` | `tests/PaperPilot.IntegrationTests/Infrastructure/*` (Testcontainers) |

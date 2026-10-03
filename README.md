@@ -5,9 +5,10 @@ An arXiv CS.AI paper curator built on .NET 10 and Aspire: daily ingestion of new
 
 The design, decisions and roadmap are in [docs/plan/](docs/plan/README.md).
 
-> **Status:** phase 4 (ingestion). A Hangfire job fetches new cs.AI papers from arXiv every weekday, parses their
-> PDFs with docling-serve and indexes them; `/api/v1/ask`, `/stream`, `/hybrid-search/`, `/models`, `/feedback` and
-> `/health` answer from them. Agentic RAG comes next.
+> **Status:** phase 5 (agentic RAG). A Hangfire job fetches new cs.AI papers from arXiv every weekday, parses their
+> PDFs with docling-serve and indexes them; `/api/v1/ask`, `/stream`, `/ask-agentic`, `/hybrid-search/`, `/models`,
+> `/feedback` and `/health` answer from them. `/ask-agentic` runs a Microsoft Agent Framework workflow that checks the
+> question is in scope, grades what it retrieves and rewrites the query when it needs to. The Telegram bot comes next.
 
 ## Prerequisites
 
