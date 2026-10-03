@@ -24,6 +24,11 @@ curl localhost:8102/ingestion/runs                                       # recen
 curl -X POST localhost:8100/api/v1/ask-agentic -H 'Content-Type: application/json' -d '{"query":"What are transformer architectures?"}'
                                                   # agentic RAG; minutes on a local GPU (3-4 LLM calls)
 dotnet run tests/fixtures/docling/make-sample-paper.cs                   # regenerate the synthetic Docling fixture PDF
+dotnet test --project tests/PaperPilot.UnitTests --coverage --coverage-output-format cobertura --coverage-settings coverage.config
+                                                  # coverage (Microsoft.Testing.Extensions.CodeCoverage), as CI runs it
+dotnet test --project tests/PaperPilot.SmokeTests # boots the whole AppHost; dev stack stopped (same container names)
+dotnet run tools/parity-check.cs -- report --recorded docs/parity/python.json --paperpilot docs/parity/paperpilot.json
+                                                  # rebuild docs/parity-report.md (record/compare: see the tool's header)
 ```
 
 Stop the AppHost with Ctrl+C or `aspire stop`. Killing the process leaves session containers (docling, Langfuse)
@@ -33,7 +38,9 @@ running, and the next start then fails on their pinned ports; remove them with `
   `dotnet user-secrets set Parameters:jina-api-key <value> --project src/PaperPilot.AppHost`
 - Optional: `Parameters:telegram-bot-token`, `Langfuse:Enabled=true` (same command). Langfuse keys and passwords are
   generated on first run and saved to the same user-secrets store.
-- Stop the Python stack first (`docker compose stop` in the Python repo): Docker Desktop has 8 GB.
+- Stop the Python stack first (`docker compose stop` in the Python repo): Docker Desktop has 8 GB. For the parity
+  check, start only its `api`, `postgres` and `redis` with `--no-deps`, and an override file that points
+  `OPENSEARCH_HOST` at `http://host.docker.internal:9210` (see `docs/parity-report.md`).
 
 ## Architecture
 
@@ -66,6 +73,10 @@ ServiceDefaults ← every host
   infinite (its 100 s default applies on top of any pipeline), and adds a pipeline whose outermost strategy is the
   total timeout. Strategies added in `configure` run inside it. `ServiceDefaults/LongRunningResilienceTests` proves
   it against a 12 s WireMock endpoint.
+- **`localhost` is IPv4 first** for every factory `HttpClient` (`LoopbackConnect`, wired in `AddServiceDefaults`).
+  Windows resolves `localhost` to `::1` first, container ports and Ollama listen on `127.0.0.1` only, and a refused
+  connection takes ~2 s on Windows; .NET tries addresses one by one, so every new pooled connection (the factory
+  rotates handlers every 2 minutes) paid 2 s. Clients outside the factory (Telegram) don't need it.
 - **AppHost uses NuGet DCP and dashboard.** The template sets `AspireUseCliBundle=true`, which needs an Aspire CLI on
   `PATH` at build time (CI has none). It's `false` here, with `ASPIRE010` suppressed. The Aspire CLI is a global
   .NET tool on this machine, on PowerShell's `PATH` but not Git Bash's.
@@ -106,6 +117,9 @@ ServiceDefaults ← every host
 - **Tracing (plan R6).**
   - RAG spans come from `PaperPilot.Rag` (`RagTelemetry`) and carry `langfuse.*` attributes. Langfuse gets its own tracer
     provider (`LangfuseExporter`) that listens only to `PaperPilot.*` and `Microsoft.Agents.AI*`.
+  - Attribute names Langfuse 3 maps: `langfuse.trace.{name,input,output}`, `langfuse.user.id`, `langfuse.session.id`,
+    `langfuse.trace.metadata.{key}`, `langfuse.observation.{input,output,level,status_message}` and
+    `langfuse.observation.metadata.{key}`. Levels are `DEBUG`, `DEFAULT`, `WARNING` and `ERROR`.
   - Don't subclass `CompositeProcessor` to filter spans: the SDK nests every later processor inside a root
     `CompositeProcessor`, which cut the Aspire dashboard down to the filtered spans.
   - In Langfuse the chat span is a generation with token usage. `rag_request` points at the ASP.NET span as its parent,
@@ -165,8 +179,12 @@ ServiceDefaults ← every host
     starts again.
   - PDFs are cached in `%LOCALAPPDATA%/PaperPilot/arxiv_pdfs`. All arXiv traffic shares one 3-second gate
     (`ArxivRateLimiter`), so a 15-paper run takes about 6 minutes, mostly docling parsing one PDF at a time.
-- **docling-serve** must get `pdf_backend=pypdfium2` (`Docling:PdfBackend`). Its default backend runs words together
-  in headings and text.
+- **docling-serve** (`v1.35.0`) must get `pdf_backend=pypdfium2` (`Docling:PdfBackend`); its default backend runs
+  words together in headings and text. The multipart fields are `files`, `to_formats` (`json`, `text`), `do_ocr`,
+  `do_table_structure`, `image_export_mode=placeholder` and `page_range`; the response's `document.json_content.texts`
+  and `document.text_content` are all PaperPilot reads. Check the names against `/docs` before changing the image tag.
+- **Hangfire.PostgreSql** re-queues a job that runs longer than its invisibility timeout (30 minutes by default), so
+  the Worker sets `InvisibilityTimeout = 3h` (plan R7), and the job is `[DisableConcurrentExecution]`.
 - **Python Docling on Windows** (for fixtures): the Hugging Face cache needs symlinks (Developer Mode), so download
   the models with `.venv/Scripts/docling-tools models download layout tableformer` and set
   `DOCLING_ARTIFACTS_PATH=%USERPROFILE%\.cache\docling\models`.
@@ -187,3 +205,7 @@ ServiceDefaults ← every host
 | With Langfuse | 3.9 GiB (+ langfuse-web 1.1, langfuse-worker 0.46, ClickHouse 0.34, MinIO 0.06) |
 
 The docling-serve-cpu image is 7.65 GB on disk. The R1 unit tests take ~35 s (they wait for slow responses).
+
+Line coverage (2026-10-03, `coverage.config`; unit / integration / both): Api 53 / 44 / 91%, Core 88 / 75 / 92%,
+Infrastructure 51 / 85 / 91%, Ingestion 13 / 87 / 92%, Rag 91 / 85 / 99%, ServiceDefaults 78 / 95 / 96%, Web 76 / 0 /
+76%. Worker, MigrationService and AppHost aren't loaded by any test. CI uploads each run's Cobertura file.

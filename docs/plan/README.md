@@ -2,6 +2,11 @@
 
 PaperPilot is a C# / .NET 10 arXiv CS.AI paper curator with hybrid search, classic RAG and agentic RAG. It matches an existing Python implementation feature for feature; "the Python version", "the Python repo" and "the Python stack" in these files refer to that implementation. This folder (`docs/plan/`) holds the plan.
 
+> **Phases 0–7 are complete, and phase 8 is complete apart from the fresh-clone test (2026-10-03).** The plan is
+> kept as the record of how PaperPilot was built: each phase file ends with what was actually built and how it was
+> checked. For the current state, start with the [README](../../README.md), [decisions](../decisions.md) and the
+> [parity report](../parity-report.md).
+
 | File | What it covers |
 |---|---|
 | [README.md](README.md) | Decisions, target architecture, solution layout, packages, configuration, conventions, risks, definition of done |
@@ -17,7 +22,7 @@ PaperPilot is a C# / .NET 10 arXiv CS.AI paper curator with hybrid search, class
 | [phase-7-blazor-ui.md](phase-7-blazor-ui.md) | Blazor chat UI |
 | [phase-8-hardening.md](phase-8-hardening.md) | Parity checks against Python, CI, docs, cleanup |
 
-Last updated 2026-10-03 (D13–D15 added at the start of phase 0; B29–B30 found in phase 3, B31–B34 in phase 4, C14 in phase 5).
+Last updated 2026-10-03 (D13–D15 added at the start of phase 0; B29–B30 found in phase 3, B31–B34 in phase 4, C14 in phase 5, B35, C15 and N6 in phase 7).
 
 ---
 
