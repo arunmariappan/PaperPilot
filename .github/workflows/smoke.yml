@@ -1,0 +1,41 @@
+name: Smoke test
+
+# Boots the whole AppHost with Aspire.Hosting.Testing and checks /api/v1/health. It pulls several GB of images
+# (docling-serve-cpu alone is ~7.6 GB), so it only runs when started by hand.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Free disk space for the container images
+        run: sudo rm -rf /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Build
+        run: dotnet build tests/PaperPilot.SmokeTests -c Release
+
+      - name: Smoke test
+        run: dotnet test --project tests/PaperPilot.SmokeTests -c Release --no-build --report-xunit-trx --results-directory TestResults
+
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test
+          path: TestResults
+          if-no-files-found: ignore

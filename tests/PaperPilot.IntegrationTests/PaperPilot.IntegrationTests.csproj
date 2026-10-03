@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="PdfPig" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="Testcontainers.PostgreSql" />

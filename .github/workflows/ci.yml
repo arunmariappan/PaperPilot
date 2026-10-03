@@ -9,19 +9,28 @@ on:
 permissions:
   contents: read
 
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
 jobs:
   build:
+    name: Build and unit tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    env:
-      DOTNET_NOLOGO: true
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
     steps:
       - uses: actions/checkout@v7
 
       - uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+
+      - uses: actions/cache@v6
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: nuget-${{ runner.os }}-${{ hashFiles('global.json', 'Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
 
       - name: Restore
         run: dotnet restore
@@ -32,6 +41,51 @@ jobs:
       - name: Check formatting
         run: dotnet format --no-restore --verify-no-changes
 
-      # Integration tests (Testcontainers) are added in phase 8.
       - name: Unit tests
-        run: dotnet test --project tests/PaperPilot.UnitTests -c Release --no-build
+        run: >-
+          dotnet test --project tests/PaperPilot.UnitTests -c Release --no-build
+          --results-directory TestResults/unit --report-xunit-trx
+          --coverage --coverage-output-format cobertura --coverage-settings coverage.config
+
+      - name: Upload test results and coverage
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-tests
+          path: TestResults/unit
+          if-no-files-found: ignore
+
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v6
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: nuget-${{ runner.os }}-${{ hashFiles('global.json', 'Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Build
+        run: dotnet build tests/PaperPilot.IntegrationTests -c Release
+
+      # Testcontainers starts Postgres, Redis and OpenSearch in the runner's Docker.
+      - name: Integration tests
+        run: >-
+          dotnet test --project tests/PaperPilot.IntegrationTests -c Release --no-build
+          --results-directory TestResults/integration --report-xunit-trx
+          --coverage --coverage-output-format cobertura --coverage-settings coverage.config
+
+      - name: Upload test results and coverage
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: integration-tests
+          path: TestResults/integration
+          if-no-files-found: ignore

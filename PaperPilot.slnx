@@ -13,6 +13,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/PaperPilot.IntegrationTests/PaperPilot.IntegrationTests.csproj" />
+    <Project Path="tests/PaperPilot.SmokeTests/PaperPilot.SmokeTests.csproj" />
     <Project Path="tests/PaperPilot.UnitTests/PaperPilot.UnitTests.csproj" />
   </Folder>
 </Solution>
