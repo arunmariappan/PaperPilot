@@ -35,6 +35,15 @@ public static class Extensions
 
             // Turn on service discovery by default
             http.AddServiceDiscovery();
+
+            // localhost over IPv4 first: Windows otherwise spends ~2 s on ::1 for every new connection (LoopbackConnect).
+            http.ConfigurePrimaryHttpMessageHandler((handler, _) =>
+            {
+                if (handler is SocketsHttpHandler sockets)
+                {
+                    sockets.ConnectCallback = LoopbackConnect.ConnectAsync;
+                }
+            });
         });
 
         // The public API uses snake_case JSON, like the Python version (top_k, use_hybrid, chunks_used).
