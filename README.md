@@ -13,6 +13,64 @@ question is in scope, grades what it finds and rewrites the query when it needs 
 
 How it was designed, and how it differs from the Python system it replaces, is in [docs/](#documentation).
 
+## Architecture
+
+```mermaid
+flowchart LR
+    browser(["Browser"])
+    phone(["Telegram app"])
+    clients(["HTTP clients"])
+    schedule(["Weekdays 06:00 UTC<br/>or Hangfire dashboard"])
+
+    web["<b>Web</b> :8101<br/>Blazor chat UI"]
+    tgapi["<b>Telegram</b><br/>Bot API"]
+
+    api["<b>API</b> :8100<br/>search, ask, stream,<br/>agentic, Telegram bot"]
+    worker["<b>Worker</b> :8102<br/>Hangfire ingestion job"]
+    migrations["<b>MigrationService</b><br/>EF Core, runs once"]
+
+    redis[("<b>Redis</b><br/>answer cache")]
+    ollama["<b>Ollama</b> on the host<br/>qwen3.5:9b"]
+    jina["<b>Jina AI</b><br/>embeddings"]
+    opensearch[("<b>OpenSearch</b><br/>chunks + vectors<br/>BM25, k-NN, RRF")]
+    docling["<b>docling-serve</b><br/>PDF parsing"]
+    arxiv["<b>arXiv</b><br/>API + PDFs"]
+    postgres[("<b>Postgres</b><br/>papers, runs,<br/>Hangfire jobs")]
+
+    browser --> web --> api
+    phone --> tgapi <-->|long polling| api
+    clients --> api
+    schedule --> worker
+
+    api -->|cache| redis
+    api -->|answer| ollama
+    api --> jina
+    api --> opensearch
+
+    worker --> jina
+    worker -->|index| opensearch
+    worker -->|parse| docling
+    worker -->|fetch| arxiv
+    worker -->|papers, runs| postgres
+    migrations -->|schema| postgres
+
+    classDef outside stroke-dasharray: 5 4
+    class ollama,jina,arxiv,tgapi outside
+```
+
+The Aspire AppHost starts the solid boxes: the four .NET projects, and Postgres, Redis, OpenSearch and docling-serve
+in Docker. Dashed boxes are outside it: Ollama runs on the host, and Jina, arXiv and Telegram are internet services.
+Rounded boxes are where requests and jobs come from.
+
+- **Questions.** The API looks for a cached answer in Redis, embeds the question with Jina, runs a hybrid BM25 and
+  vector search in OpenSearch, and has Ollama answer from the best chunks. The agentic endpoint adds a scope check,
+  chunk grading and query rewriting, each one more Ollama call. The chat UI calls the API over HTTP; the Telegram bot
+  runs inside the API and uses the same code.
+- **Ingestion.** The Worker's Hangfire job fetches new cs.AI papers from arXiv, parses their PDFs with docling-serve,
+  splits them into chunks, embeds the chunks with Jina and indexes them in OpenSearch. Papers and each run's counts
+  go to Postgres.
+- **Telemetry.** Every service sends OpenTelemetry to the Aspire dashboard, and to Langfuse when it is on.
+
 ## Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) (10.0.301 or later; see `global.json`). Trust its HTTPS
