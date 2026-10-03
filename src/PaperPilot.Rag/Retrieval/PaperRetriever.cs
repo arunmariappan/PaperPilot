@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using PaperPilot.Core.Domain;
 using PaperPilot.Core.Exceptions;

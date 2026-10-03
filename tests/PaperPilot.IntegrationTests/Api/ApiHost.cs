@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.Json.Nodes;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using PaperPilot.IntegrationTests.Caching;
 using PaperPilot.IntegrationTests.Persistence;

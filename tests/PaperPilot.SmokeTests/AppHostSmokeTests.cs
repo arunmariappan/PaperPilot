@@ -1,6 +1,5 @@
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
-using Aspire.Hosting;
 using Aspire.Hosting.Testing;
 
 namespace PaperPilot.SmokeTests;

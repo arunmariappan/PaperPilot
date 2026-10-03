@@ -15,7 +15,7 @@ namespace PaperPilot.Rag;
 
 /// <summary>
 /// Classic RAG for <c>/ask</c> and <c>/stream</c>: cache lookup → retrieval → prompt → generation → cache store.
-/// A cache failure never fails a request. A search outage does (B6): <see cref="AskAsync"/> throws and
+/// A cache failure never fails a request. A search outage does (B6): <see cref="AskAsync(AskRequest, CancellationToken)"/> throws and
 /// <see cref="StreamAsync"/> ends with an <c>{error}</c> event.
 /// </summary>
 public sealed partial class RagService(

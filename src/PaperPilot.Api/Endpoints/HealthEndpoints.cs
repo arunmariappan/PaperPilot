@@ -3,7 +3,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using PaperPilot.Core.Contracts;
 using PaperPilot.Core.Options;
-using PaperPilot.Infrastructure;
 
 namespace PaperPilot.Api.Endpoints;
 
