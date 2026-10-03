@@ -46,6 +46,7 @@ Each item names the Python location and the phase that handles it.
 | B32 | A download that fails part-way leaves a truncated PDF in the cache, and later runs reuse it ("Using cached PDF") and fail to parse it every time. | Downloads go to a `.part` file that is moved into place only when complete, and deleted on failure. | `arxiv/client.py` `_download_with_retry` | 4 |
 | B33 | A PDF skipped for size or length makes the parser service raise "Docling parsing returned no result", so the run reports it as a pipeline error and doesn't count its download. | Skipped PDFs count as downloaded and as `pdfs_skipped`; they are not errors. | `pdf_parser/parser.py` | 4 |
 | B34 | Re-indexing deletes a paper's chunks before embedding the new ones, so when Jina fails the paper disappears from search until the next successful run. | Old chunks are deleted only once the new embeddings are ready. | `hybrid_indexer.py` `index_papers_batch` | 4 |
+| B35 | The Gradio client treats any event with `sources` as metadata and skips it, so the no-results event (`{answer, sources: [], done: true}`) is never shown and the answer box keeps its old content. | The UI checks `done` first and shows "No relevant information found." | `gradio_app.py` `stream_response` | 7 |
 
 ## C: deliberate changes
 
@@ -65,6 +66,7 @@ Each item names the Python location and the phase that handles it.
 | C12 | The Telegram bot calls the shared `RagService` instead of running its own copy of the RAG pipeline, and `/search` uses the shared retriever. Sources come in retrieval order (Python used a set), `/search` falls back to BM25 when the query can't be embedded (Python replied "Search failed"), and questions over 1,000 characters are answered (Python's `AskRequest` validation made them an error). | One code path. The cache and tracing now apply to Telegram too. |
 | C13 | `/ask`, `/stream` and `/ask-agentic` reject a whitespace-only `query` with **400**. Python's `min_length=1` let `"   "` through to `/ask` and `/stream`, and `/ask-agentic` raised `ValueError` (422). `/hybrid-search/` still accepts it, because a blank query there means "latest papers" (`match_all`). | One rule for every question endpoint; a blank question can't produce a useful answer. |
 | C14 | `/ask-agentic` always returns `trace_id`: the OpenTelemetry trace id, which is also the Langfuse trace id. Python returned `null` when Langfuse was off. | With Langfuse off, the id still finds the trace in the Aspire dashboard; `/feedback` answers 503 as before. |
+| C15 | The chat UI lists **every** source as `arXiv:{id}` (abstract page) plus a PDF link below the answer, and shows the search mode and chunk count in a status line. Gradio appended a "Search Info" block (first 3 sources, labelled with the PDF file name) to the Markdown answer. Examples use the configured model instead of `llama3.2:1b`. | Sources are the point of the answer; the old labels lost old-style IDs (B8). |
 
 ## N: new capabilities
 
@@ -75,3 +77,4 @@ Each item names the Python location and the phase that handles it.
 | N3 | `POST /ingestion/run?from=yyyyMMdd&to=yyyyMMdd` on the Worker, for backfills and manual runs | 4 |
 | N4 | `tools/seed-opensearch.cs` (a .NET 10 file-based app, run with `dotnet run tools/seed-opensearch.cs`): copies chunks, embeddings included, from the Python stack's OpenSearch into PaperPilot's | 2 |
 | N5 | Optional Telegram `/agent <question>` command that uses the agentic workflow | 6 |
+| N6 | Blazor chat UI additions: an **Agentic** mode (`/ask-agentic`, with reasoning steps and retrieval attempts), 👍 / 👎 feedback with a comment, a **Stop** button, and the earlier answers of the session | 7 |

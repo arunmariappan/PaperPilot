@@ -80,7 +80,7 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 | Python | PaperPilot | Notes |
 |---|---|---|
 | `src/services/telegram/bot.py`, `factory.py` | `src/PaperPilot.Api/Telegram/TelegramBotService.cs`, `TelegramUpdateHandler.cs`, `TelegramMessageFormatter.cs`, `TelegramSender.cs`, `TelegramRegistration.cs` | C12, B19, N5 |
-| `src/gradio_app.py`, `gradio_launcher.py` | `src/PaperPilot.Web/Components/Pages/Chat.razor` (+ `ApiClient.cs`) | |
+| `src/gradio_app.py`, `gradio_launcher.py` | `src/PaperPilot.Web/Components/Pages/Chat.razor` and `Components/Chat/*` (+ `Api/PaperPilotApiClient.cs`) | B35, C15, N6 |
 
 ## Tests
 

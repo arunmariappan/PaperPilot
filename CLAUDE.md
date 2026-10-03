@@ -138,6 +138,21 @@ ServiceDefaults ← every host
   - Only one process may poll a token, so stop the Python stack's bot first (Telegram answers 409 otherwise).
   - The token is part of every Bot API URL. Never give the client a factory `HttpClient` (it logs URLs), and keep
     `TelegramRegistration.HideBotToken` in place: it drops `getUpdates` spans and redacts the token in the rest.
+- **Web UI** (`PaperPilot.Web`): the chat page is Interactive Server without prerendering, and talks to the API only
+  through `PaperPilotApiClient` (no resilience handlers, 15-minute timeout; Stop cancels).
+  - Razor passes a **string** component parameter literally unless it starts with `@`: `Message="_formMessage"` sends
+    the text "_formMessage" (and the field shows up as unused, CS0414). Write `Message="@_formMessage"`.
+  - Answers go through `AnswerMarkdown` (Markdig with HTML disabled, http/https/mailto links only). Don't switch it to
+    `UseAdvancedExtensions()`: generic attributes would let model output add `onclick`.
+  - bUnit tests use the async event methods (`SubmitAsync`, `ClickAsync`, `InputAsync`) and `WaitForAssertion`; the
+    synchronous ones can return before the handler has run when the whole suite runs in parallel.
+- **Rebuilding while the stack runs:** running projects lock their `bin` folders. Stop just those resources, build,
+  and start them again: `aspire resource api stop --apphost src/PaperPilot.AppHost` (also `worker`, `web`), then
+  `... start`. A change to Core or Infrastructure needs `api` and `worker` stopped; the AppHost itself stays locked, so
+  build the projects or tests rather than the whole solution.
+- **Don't start the AppHost from VS Code's terminal** with `dotnet run`: the AppHost then asks VS Code to launch the
+  projects, VS Code answers 400, and `api`, `web`, `worker` and `migrations` stay at FailedToStart. Use another
+  terminal or `aspire start`.
 - **Activities in async iterators:** `Activity.Current` resets at every `yield`, so spans started after one lose their
   parent. `RagService.StreamAsync` runs the pipeline in a normal async method that writes to a channel.
 - **WireMock** adds a request to `LogEntries` only after the client already has the response, so assert on it after
