@@ -1,0 +1,24 @@
+{
+  "question": "What are transformers?",
+  "error": "Ollama is down",
+  "guardrail": {
+    "score": 50,
+    "reason": "LLM validation failed, using conservative default: Ollama is down"
+  },
+  "grading": [
+    {
+      "context": "Transformers rely on self-attention to relate every token to every other token.",
+      "is_relevant": true,
+      "reasoning": "Fallback heuristic (LLM failed): sufficient content"
+    },
+    {
+      "context": "Too short.",
+      "is_relevant": false,
+      "reasoning": "Fallback heuristic (LLM failed): insufficient content"
+    }
+  ],
+  "rewritten_query": "What are transformers? research paper arxiv machine learning",
+  "generated_answer": "I apologize, but I encountered an error while generating the answer: Ollama is down\n\nPlease try again or rephrase your question.",
+  "out_of_scope_answer": "I apologize, but I can only help with questions about academic research papers in Computer Science, Artificial Intelligence, and Machine Learning from arXiv.\n\nYour question: 'What are transformers?'\n\nThis appears to be outside my domain of expertise. For questions like this, you might want to try:\n- General-purpose AI assistants for broad knowledge questions\n- Domain-specific resources for topics outside CS/AI/ML\n- Technical documentation if asking about specific software/tools\n\nIf you have a question about AI/ML research papers, I'd be happy to help!",
+  "max_attempts_answer": "I apologize, but I couldn't find relevant research papers after 2 attempts.\nThis may be because:\n1. No papers in the database contain relevant information\n2. The query terms don't match the indexed content\n\nPlease try rephrasing your question with more specific technical terms."
+}

@@ -33,16 +33,64 @@ public static class RagTelemetry
     }
 
     /// <summary>Sets the request's output on the root span and the trace, as Python's <c>end_request</c> did.</summary>
-    internal static void EndRequest(this Activity? activity, string answer, TimeSpan duration)
+    internal static void EndRequest(this Activity? activity, string answer, TimeSpan duration) =>
+        activity.SetTraceOutput(new { Answer = answer, TotalDurationSeconds = Math.Round(duration.TotalSeconds, 3), ResponseLength = answer.Length });
+
+    /// <summary>Sets an output on the span and on its trace.</summary>
+    internal static void SetTraceOutput(this Activity? activity, object payload)
+    {
+        activity.SetOutput(payload);
+        activity?.SetJsonTag(LangfuseAttributes.TraceOutput, payload);
+    }
+
+    /// <summary>Langfuse metadata on the span, one attribute per key.</summary>
+    internal static void SetMetadata(this Activity? activity, params ReadOnlySpan<(string Key, object? Value)> metadata)
+    {
+        foreach (var (key, value) in metadata)
+        {
+            activity?.SetTag(LangfuseAttributes.ObservationMetadataPrefix + key, value);
+        }
+    }
+
+    /// <summary>Langfuse metadata on the span's trace, one attribute per key.</summary>
+    internal static void SetTraceMetadata(this Activity? activity, params ReadOnlySpan<(string Key, object? Value)> metadata)
+    {
+        foreach (var (key, value) in metadata)
+        {
+            activity?.SetTag(LangfuseAttributes.TraceMetadataPrefix + key, value);
+        }
+    }
+
+    /// <summary>
+    /// Records a failure the code recovered from: the exception as a span event and a Langfuse level
+    /// (<c>WARNING</c> or <c>ERROR</c>). Only <c>ERROR</c> also marks the span as failed.
+    /// </summary>
+    internal static void Degrade(this Activity? activity, Exception exception, string level)
     {
         if (activity is null)
         {
             return;
         }
 
-        var output = new { Answer = answer, TotalDurationSeconds = Math.Round(duration.TotalSeconds, 3), ResponseLength = answer.Length };
-        activity.SetOutput(output);
-        activity.SetJsonTag(LangfuseAttributes.TraceOutput, output);
+        activity.AddException(exception);
+        activity.SetTag(LangfuseAttributes.ObservationLevel, level);
+        activity.SetTag(LangfuseAttributes.ObservationStatusMessage, exception.Message);
+        if (level == ObservationLevels.Error)
+        {
+            activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        }
+    }
+
+    /// <summary>Shortens <paramref name="text"/> for a span payload as Python did: the first characters plus "...".</summary>
+    internal static string Preview(string text, int length)
+    {
+        if (text.Length <= length)
+        {
+            return text;
+        }
+
+        var end = char.IsHighSurrogate(text[length - 1]) ? length - 1 : length;
+        return text[..end] + "...";
     }
 
     /// <summary>Marks the span as failed and records the exception.</summary>
@@ -78,4 +126,15 @@ public static class LangfuseAttributes
     public const string TraceOutput = "langfuse.trace.output";
     public const string ObservationInput = "langfuse.observation.input";
     public const string ObservationOutput = "langfuse.observation.output";
+    public const string ObservationLevel = "langfuse.observation.level";
+    public const string ObservationStatusMessage = "langfuse.observation.status_message";
+    public const string ObservationMetadataPrefix = "langfuse.observation.metadata.";
+    public const string TraceMetadataPrefix = "langfuse.trace.metadata.";
+}
+
+/// <summary>Values of <see cref="LangfuseAttributes.ObservationLevel"/>.</summary>
+public static class ObservationLevels
+{
+    public const string Warning = "WARNING";
+    public const string Error = "ERROR";
 }

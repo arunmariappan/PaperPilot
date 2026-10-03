@@ -59,12 +59,19 @@ internal sealed class FakeRetriever : IPaperRetriever
 
     public Exception? Failure { get; set; }
 
-    public int Calls { get; private set; }
+    public int Calls => Requests.Count;
+
+    /// <summary>Every call's arguments, in order.</summary>
+    public List<(string Query, int TopK, bool UseHybrid, IReadOnlyList<string>? Categories)> Requests { get; } = [];
 
     public Task<RetrievalResult> RetrieveAsync(
         string query, int topK, bool useHybrid, IReadOnlyList<string>? categories, CancellationToken cancellationToken = default)
     {
-        Calls++;
+        lock (Requests)
+        {
+            Requests.Add((query, topK, useHybrid, categories));
+        }
+
         return Failure is null ? Task.FromResult(Result) : Task.FromException<RetrievalResult>(Failure);
     }
 
