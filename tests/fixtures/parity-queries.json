@@ -1,0 +1,338 @@
+{
+  "setup": [
+    "Both APIs searched the **same OpenSearch index** (PaperPilot's, port 9210): the Python API ran with `OPENSEARCH_HOST` pointed at it, so the data was identical without re-seeding.",
+    "Both used the host's Ollama with `qwen3.5:9b` and thinking off. The stacks ran one after the other, never at the same time, so neither competed with the other for the GPU.",
+    "The Python API ran with Langfuse and Telegram off (`LANGFUSE__ENABLED=false`, `TELEGRAM__ENABLED=false`); PaperPilot ran with Langfuse on and the Telegram bot running.",
+    "Every `/ask` question is asked twice: the first call is a cache miss (none of the questions had been asked before), the second a hit.",
+    "PaperPilot was recorded after the `localhost` fix (commit 5a1c0e4). An earlier run, before it, had a cache-miss p50 of 40.7 s. Ollama generated at the same rate for both stacks (about 7.3 tokens/s), so cache-miss latency follows answer length, which varies from run to run (sampling settings differ, B29; chat API instead of one prompt, C3). Three of its requests had also spent 2 s connecting to `localhost` over IPv6 before falling back to IPv4.",
+    "PaperPilot's times for g10–g20 are too slow: a second PaperPilot run, started by mistake, was generating `/ask` answers on the same GPU at the time. Asked again on their own afterwards, g11–g20 took 4.7–7.1 s each (Python: 5.9–8.2 s). Agentic latency isn't one of the checks, and the guardrail decisions and sources don't depend on speed."
+  ],
+  "search": [
+    {
+      "id": "s01",
+      "request": {
+        "query": "diffusion language models",
+        "size": 10,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "s02",
+      "request": {
+        "query": "diffusion language models",
+        "size": 10,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "s03",
+      "request": {
+        "query": "multi-robot coordination semantic communication",
+        "size": 10,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "s04",
+      "request": {
+        "query": "multi-robot coordination",
+        "size": 10,
+        "use_hybrid": true,
+        "categories": [
+          "cs.RO"
+        ]
+      }
+    },
+    {
+      "id": "s05",
+      "request": {
+        "query": "reinforcement learning credit assignment",
+        "size": 10,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "s06",
+      "request": {
+        "query": "reinforcement learning credit assignment",
+        "size": 10,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "s07",
+      "request": {
+        "query": "3D generation topology",
+        "size": 10,
+        "use_hybrid": true,
+        "categories": [
+          "cs.CV"
+        ]
+      }
+    },
+    {
+      "id": "s08",
+      "request": {
+        "query": "policy engine for autonomous agents",
+        "size": 10,
+        "use_hybrid": false,
+        "categories": [
+          "cs.CR"
+        ]
+      }
+    },
+    {
+      "id": "s09",
+      "request": {
+        "query": "synthetic data selection",
+        "size": 5,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "s10",
+      "request": {
+        "query": "language model confidence and probabilities",
+        "size": 5,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "s11",
+      "request": {
+        "query": " ",
+        "size": 10,
+        "use_hybrid": false,
+        "latest_papers": true
+      }
+    },
+    {
+      "id": "s12",
+      "request": {
+        "query": "world models ARC-AGI",
+        "size": 10,
+        "use_hybrid": false,
+        "latest_papers": true
+      }
+    },
+    {
+      "id": "s13",
+      "request": {
+        "query": "hypernetwork weight generation",
+        "size": 10,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "s14",
+      "request": {
+        "query": "table discovery benchmark",
+        "size": 5,
+        "from": 5,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "s15",
+      "request": {
+        "query": "image generation with reasoning and reflection",
+        "size": 10,
+        "use_hybrid": true,
+        "categories": [
+          "cs.AI",
+          "cs.CV"
+        ]
+      }
+    }
+  ],
+  "ask": [
+    {
+      "id": "a01",
+      "request": {
+        "query": "What is a hierarchical continuous diffusion language model?",
+        "top_k": 3,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "a02",
+      "request": {
+        "query": "How does SHARPO assign credit in agentic reinforcement learning?",
+        "top_k": 3,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "a03",
+      "request": {
+        "query": "What does the Sapien policy engine do?",
+        "top_k": 3,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "a04",
+      "request": {
+        "query": "How do robots infer partner constraints for zero-shot coordination?",
+        "top_k": 3,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "a05",
+      "request": {
+        "query": "What is TabJoinBench?",
+        "top_k": 2,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "a06",
+      "request": {
+        "query": "How can greedy layer-wise training rival end-to-end backpropagation?",
+        "top_k": 4,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "a07",
+      "request": {
+        "query": "What is the VISTA visual harness for reasoning?",
+        "top_k": 3,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "a08",
+      "request": {
+        "query": "How are verbalized and internal probabilities related in large language models?",
+        "top_k": 3,
+        "use_hybrid": true
+      }
+    },
+    {
+      "id": "a09",
+      "request": {
+        "query": "What is Enterprise Representation Simplification?",
+        "top_k": 3,
+        "use_hybrid": false
+      }
+    },
+    {
+      "id": "a10",
+      "request": {
+        "query": "How does DuoMind coordinate multiple robots?",
+        "top_k": 3,
+        "use_hybrid": true,
+        "categories": [
+          "cs.RO"
+        ]
+      }
+    }
+  ],
+  "agentic": [
+    {
+      "id": "g01",
+      "query": "How does BERT work?",
+      "in_scope": true
+    },
+    {
+      "id": "g02",
+      "query": "What are transformer architectures?",
+      "in_scope": true
+    },
+    {
+      "id": "g03",
+      "query": "How do diffusion language models generate text?",
+      "in_scope": true
+    },
+    {
+      "id": "g04",
+      "query": "How is credit assigned in reinforcement learning for LLM agents?",
+      "in_scope": true
+    },
+    {
+      "id": "g05",
+      "query": "How do world models help agents solve ARC-AGI tasks?",
+      "in_scope": true
+    },
+    {
+      "id": "g06",
+      "query": "What is knowledge distillation in neural networks?",
+      "in_scope": true
+    },
+    {
+      "id": "g07",
+      "query": "How do multiple robots coordinate without communication?",
+      "in_scope": true
+    },
+    {
+      "id": "g08",
+      "query": "What are hypernetworks used for?",
+      "in_scope": true
+    },
+    {
+      "id": "g09",
+      "query": "Can large language models estimate their own confidence?",
+      "in_scope": true
+    },
+    {
+      "id": "g10",
+      "query": "How should synthetic training data be selected?",
+      "in_scope": true
+    },
+    {
+      "id": "g11",
+      "query": "What is a dog?",
+      "in_scope": false
+    },
+    {
+      "id": "g12",
+      "query": "What is 2+2?",
+      "in_scope": false
+    },
+    {
+      "id": "g13",
+      "query": "What's the weather like in Chennai today?",
+      "in_scope": false
+    },
+    {
+      "id": "g14",
+      "query": "Who won the 2022 FIFA World Cup?",
+      "in_scope": false
+    },
+    {
+      "id": "g15",
+      "query": "Give me a recipe for chocolate cake.",
+      "in_scope": false
+    },
+    {
+      "id": "g16",
+      "query": "What is the capital of France?",
+      "in_scope": false
+    },
+    {
+      "id": "g17",
+      "query": "How do I change a flat car tyre?",
+      "in_scope": false
+    },
+    {
+      "id": "g18",
+      "query": "Recommend a good movie to watch tonight.",
+      "in_scope": false
+    },
+    {
+      "id": "g19",
+      "query": "What is the price of gold today?",
+      "in_scope": false
+    },
+    {
+      "id": "g20",
+      "query": "Write a short poem about the sea.",
+      "in_scope": false
+    }
+  ],
+  "explanations": {
+    "agentic.sources": "B1: Python's `/ask-agentic` never fills `sources` (`relevant_sources` is never set, and `_extract_sources` returns dicts for a `List[str]` field), so every answer comes back with `[]`. PaperPilot lists the PDFs of the chunks the answer was generated from."
+  }
+}
