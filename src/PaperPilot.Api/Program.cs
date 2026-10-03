@@ -1,4 +1,5 @@
 using PaperPilot.Api.Endpoints;
+using PaperPilot.Api.Telegram;
 using PaperPilot.Core.Options;
 using PaperPilot.Infrastructure;
 using PaperPilot.Infrastructure.Caching;
@@ -19,6 +20,7 @@ builder.AddPaperPilotLlm();
 builder.AddPaperPilotCache();
 builder.AddPaperPilotRag();
 builder.AddPaperPilotLangfuseScores();
+builder.AddPaperPilotTelegram();
 
 builder.Services.AddHostedService<SearchIndexInitializer>();
 builder.Services.AddHealthChecks()

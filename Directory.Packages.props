@@ -33,6 +33,9 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="PdfPig" Version="0.1.16" />
   </ItemGroup>
+  <ItemGroup Label="Telegram">
+    <PackageVersion Include="Telegram.Bot" Version="22.10.3.2" />
+  </ItemGroup>
   <ItemGroup Label="Persistence">
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.6.0" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />

@@ -8,4 +8,7 @@ public sealed class TelegramOptions
     public bool Enabled { get; set; }
 
     public string BotToken { get; set; } = string.Empty;
+
+    /// <summary>A local Bot API server instead of api.telegram.org (tests point it at a fake server).</summary>
+    public string? BaseUrl { get; set; }
 }
