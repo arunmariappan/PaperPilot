@@ -133,6 +133,11 @@ ServiceDefaults ← every host
   - The agent lives in `PaperPilot.Rag/Agentic`: one `AgenticRagWorkflow` singleton, stateless executors, and an
     immutable `AgentRunState`. Test stubs tell its four LLM calls apart by the prompt's first line; match the question on
     `User Query: …`, because the guardrail prompt's own examples include "What is 2+2?".
+- **Telegram bot** (`PaperPilot.Api/Telegram`) runs only with `Telegram:Enabled` and a token (the AppHost sets both
+  when `Parameters:telegram-bot-token` is in its user secrets).
+  - Only one process may poll a token, so stop the Python stack's bot first (Telegram answers 409 otherwise).
+  - The token is part of every Bot API URL. Never give the client a factory `HttpClient` (it logs URLs), and keep
+    `TelegramRegistration.HideBotToken` in place: it drops `getUpdates` spans and redacts the token in the rest.
 - **Activities in async iterators:** `Activity.Current` resets at every `yield`, so spans started after one lose their
   parent. `RagService.StreamAsync` runs the pipeline in a normal async method that writes to a channel.
 - **WireMock** adds a request to `LogEntries` only after the client already has the response, so assert on it after
