@@ -6,6 +6,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="PaperPilot.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
     <ProjectReference Include="../PaperPilot.Core/PaperPilot.Core.csproj" />
     <ProjectReference Include="../PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />

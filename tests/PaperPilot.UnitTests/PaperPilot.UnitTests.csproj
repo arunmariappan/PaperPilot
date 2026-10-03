@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../src/PaperPilot.Api/PaperPilot.Api.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Core/PaperPilot.Core.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Infrastructure/PaperPilot.Infrastructure.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Ingestion/PaperPilot.Ingestion.csproj" />
