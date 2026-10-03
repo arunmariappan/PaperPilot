@@ -278,8 +278,9 @@ public sealed class AgenticRagServiceTests : IDisposable
         ]);
         root.GetTagItem(LangfuseAttributes.TraceName).ShouldBe("agentic_rag_request");
         root.GetTagItem(LangfuseAttributes.UserId).ShouldBe("api_user");
-        (root.GetTagItem("langfuse.trace.metadata.service"), root.GetTagItem("langfuse.trace.metadata.top_k"),
-            root.GetTagItem("langfuse.trace.metadata.model")).ShouldBe(("agentic_rag", 3, "qwen3.5:9b"));
+        (root.GetTagItem("langfuse.trace.metadata.env"), root.GetTagItem("langfuse.trace.metadata.service"),
+            root.GetTagItem("langfuse.trace.metadata.top_k"), root.GetTagItem("langfuse.trace.metadata.model"))
+            .ShouldBe(("testing", "agentic_rag", 3, "qwen3.5:9b"));
         root.GetTagItem(LangfuseAttributes.TraceOutput).ShouldBeOfType<string>().ShouldContain("\"retrieval_attempts\":2");
         spans.Where(s => s.OperationName == "document_grading")
             .Select(s => (string)s.GetTagItem(LangfuseAttributes.ObservationOutput)!)

@@ -39,7 +39,7 @@ internal sealed partial class AgenticRagService(
         using var activity = RagTelemetry.StartRequest(RequestSpanName, request.Query);
         (string, object?)[] metadata =
         [
-            ("env", environment.EnvironmentName),
+            ("env", environment.EnvironmentName.ToLowerInvariant()),
             ("service", "agentic_rag"),
             ("top_k", request.TopK),
             ("use_hybrid", request.UseHybrid),
