@@ -1,8 +1,10 @@
+using PaperPilot.Web.Api;
 using PaperPilot.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.Services.AddPaperPilotApiClient();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

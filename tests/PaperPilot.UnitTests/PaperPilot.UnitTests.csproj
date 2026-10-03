@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="../fixtures/**/*.json;../fixtures/**/*.xml;../fixtures/**/*.pdf" LinkBase="fixtures" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/**/*.json;../fixtures/**/*.xml;../fixtures/**/*.pdf;../fixtures/**/*.sse" LinkBase="fixtures" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="bunit" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="PdfPig" />
@@ -31,6 +32,7 @@
     <ProjectReference Include="../../src/PaperPilot.Ingestion/PaperPilot.Ingestion.csproj" />
     <ProjectReference Include="../../src/PaperPilot.Rag/PaperPilot.Rag.csproj" />
     <ProjectReference Include="../../src/PaperPilot.ServiceDefaults/PaperPilot.ServiceDefaults.csproj" />
+    <ProjectReference Include="../../src/PaperPilot.Web/PaperPilot.Web.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,4 @@
+data: {"sources":["https://arxiv.org/pdf/2610.02150.pdf"],"chunks_used":1,"search_mode":"hybrid"}
+
+data: {"error":"Response status code does not indicate success: 404 (Not Found)."}
+
