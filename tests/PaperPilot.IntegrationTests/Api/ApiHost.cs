@@ -67,6 +67,16 @@ internal sealed class ApiHost(PostgresFixture postgres, OpenSearchFixture search
             .RespondWith(Response.Create().WithCallback(request =>
                 JsonNode.Parse(request.Body!)!["stream"]!.GetValue<bool>() ? ChatStream(tokens) : Json(ChatMessage(string.Concat(tokens), done: true))));
 
+    /// <summary>Ollama <c>/api/chat</c> answering each request with <paramref name="reply"/>(the last message's text).</summary>
+    public void StubChat(Func<string, string> reply) =>
+        Fakes.Given(Request.Create().WithPath("/api/chat").UsingPost()).AtPriority(10)
+            .RespondWith(Response.Create().WithCallback(request =>
+            {
+                var body = JsonNode.Parse(request.Body!)!;
+                var text = reply(body["messages"]!.AsArray()[^1]!["content"]!.GetValue<string>());
+                return body["stream"]!.GetValue<bool>() ? ChatStream([text]) : Json(ChatMessage(text, done: true));
+            }));
+
     public IEnumerable<IRequestMessage> Requests(string path) =>
         Fakes.LogEntries.Select(e => e.RequestMessage!).Where(r => r.Path == path);
 

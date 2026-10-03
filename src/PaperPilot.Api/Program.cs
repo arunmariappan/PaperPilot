@@ -41,6 +41,7 @@ var api = app.MapGroup("/api/v1");
 api.MapHealthEndpoints();
 api.MapSearchEndpoints();
 api.MapAskEndpoints();
+api.MapAgenticAskEndpoints();
 api.MapFeedbackEndpoints();
 api.MapModelEndpoints();
 
