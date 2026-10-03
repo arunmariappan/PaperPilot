@@ -65,13 +65,13 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 |---|---|---|
 | `src/services/arxiv/client.py` | `src/PaperPilot.Infrastructure/Arxiv/ArxivClient.cs`, `ArxivAtomParser.cs`, `ArxivQueryBuilder.cs` | URL encoding must match Python exactly (golden test). |
 | `src/schemas/arxiv/paper.py` | `src/PaperPilot.Core/Domain/ArxivPaper.cs`, `Paper.cs` | |
-| `src/services/pdf_parser/docling.py`, `parser.py`, `factory.py` | `src/PaperPilot.Infrastructure/Pdf/DoclingServeClient.cs`, `PdfValidator.cs` (PdfPig), `DoclingSectionExtractor.cs` | The section algorithm is a 1:1 port over `json_content.texts[]`. |
+| `src/services/pdf_parser/docling.py`, `parser.py`, `factory.py` | `src/PaperPilot.Infrastructure/Pdf/DoclingServeClient.cs`, `PdfValidator.cs` (PdfPig), `PdfParser.cs` (with `DoclingSectionExtractor`) | The section algorithm is a 1:1 port over `json_content.texts[]`. |
 | `src/schemas/pdf_parser/models.py` | `src/PaperPilot.Core/Domain/PdfContent.cs` | Figures and tables are dropped; Python always left them empty. |
 | `src/services/metadata_fetcher.py` | `src/PaperPilot.Ingestion/PaperFetchService.cs` | `SemaphoreSlim` for download (5) and parse (1) concurrency. |
-| `src/services/indexing/text_chunker.py`, `src/schemas/indexing/models.py` | `src/PaperPilot.Core/Indexing/TextChunker.cs`, `TextChunk.cs` | Golden tests, with B9, B10 and B11 applied. |
+| `src/services/indexing/text_chunker.py`, `src/schemas/indexing/models.py` | `src/PaperPilot.Core/Indexing/TextChunker.cs` (with `TextChunk`), `src/PaperPilot.Core/Text/PythonText.cs` | Golden tests, with B9, B10, B11 and B31 applied. |
 | `src/services/indexing/hybrid_indexer.py`, `factory.py` | `src/PaperPilot.Ingestion/HybridIndexer.cs` | |
 | `src/repositories/paper.py`, `src/models/paper.py` | `src/PaperPilot.Infrastructure/Persistence/PaperRepository.cs`, `Configurations/PaperConfiguration.cs` | |
-| `airflow/dags/arxiv_paper_ingestion.py` + `arxiv_ingestion/{setup,fetching,indexing,reporting}.py` | `src/PaperPilot.Ingestion/DailyIngestionJob.cs` (steps), `src/PaperPilot.Worker/Program.cs` (recurring job registration) | C9 |
+| `airflow/dags/arxiv_paper_ingestion.py` + `arxiv_ingestion/{setup,fetching,indexing,reporting}.py` | `src/PaperPilot.Ingestion/DailyIngestionJob.cs` (steps), `IngestionRules.cs` (window, failure rule, cleanup), `src/PaperPilot.Worker/Program.cs` (recurring job registration) | C9 |
 | `airflow/Dockerfile`, `entrypoint.sh`, `requirements-airflow.txt` | Dropped | No second dependency set and no pip/sqlalchemy pin to keep in sync. |
 | `airflow/dags/hello_world_dag.py` | Dropped | |
 
@@ -88,8 +88,8 @@ Every file in the Python repo that holds behaviour, and where that behaviour goe
 |---|---|
 | `tests/unit/services/test_opensearch_query_builder.py` | `tests/PaperPilot.UnitTests/Search/QueryBuilderTests.cs` (+ parity fixtures) |
 | `tests/unit/services/test_arxiv_client.py` | `tests/PaperPilot.UnitTests/Arxiv/*Tests.cs` |
-| `tests/unit/services/test_pdf_parser.py` | `tests/PaperPilot.UnitTests/Pdf/DoclingSectionExtractorTests.cs` |
-| `tests/unit/services/test_metadata_fetcher.py` | `tests/PaperPilot.UnitTests/Ingestion/PaperFetchServiceTests.cs` |
+| `tests/unit/services/test_pdf_parser.py` | `tests/PaperPilot.UnitTests/Pdf/PdfParsingTests.cs` |
+| `tests/unit/services/test_metadata_fetcher.py` | `tests/PaperPilot.IntegrationTests/Ingestion/IngestionJobTests.cs` |
 | `tests/unit/services/test_telegram.py` | `tests/PaperPilot.UnitTests/Telegram/*Tests.cs` |
 | `tests/unit/services/agents/*` (stale: fixtures that don't exist) | `tests/PaperPilot.UnitTests/Agentic/*Tests.cs`, written fresh with a fake `IChatClient` |
 | `tests/unit/test_config.py`, `schemas/test_search.py` | `tests/PaperPilot.UnitTests/Options/*`, `Contracts/*` |

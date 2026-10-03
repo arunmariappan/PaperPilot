@@ -19,6 +19,9 @@ dotnet run --project src/PaperPilot.AppHost       # whole stack in the foregroun
 aspire start --apphost src/PaperPilot.AppHost     # in the background (PowerShell); `aspire describe`, `aspire logs <resource>`
 aspire stop --apphost src/PaperPilot.AppHost
 aspire otel traces api --apphost src/PaperPilot.AppHost --trace-id <id> --format Json   # a trace from the dashboard
+curl -X POST "localhost:8102/ingestion/run?from=20261001&to=20261001"   # manual ingestion run / backfill (N3)
+curl localhost:8102/ingestion/runs                                       # recent runs (N2)
+dotnet run tests/fixtures/docling/make-sample-paper.cs                   # regenerate the synthetic Docling fixture PDF
 ```
 
 Stop the AppHost with Ctrl+C or `aspire stop`. Killing the process leaves session containers (docling, Langfuse)
@@ -43,7 +46,7 @@ ServiceDefaults ← every host
 | Aspire dashboard | 17205 | login URL is printed at startup |
 | `api` | 8100 | `/api/v1/*`, API docs at `/docs`, OpenAPI at `/openapi/v1.json` |
 | `web` | 8101 | Blazor UI |
-| `worker` | 8102 | Hangfire dashboard at `/hangfire` (phase 4) |
+| `worker` | 8102 | Hangfire dashboard at `/hangfire`, `POST /ingestion/run`, `GET /ingestion/runs` |
 | `postgres` | 5442 | persistent container, volume `paperpilot-postgres-data` |
 | `redis` | 6390 (TLS) | see gotchas |
 | `opensearch` | 9210 | persistent, 512 MB heap, volume `paperpilot-opensearch-data` |
@@ -112,6 +115,23 @@ ServiceDefaults ← every host
   the call returns (or poll briefly), never in a test that aborts the request.
 - **`HealthChecks` is ambiguous** in projects that reference `Aspire.StackExchange.Redis` (it brings a root
   `HealthChecks.*` namespace); write `PaperPilot.Infrastructure.HealthChecks.ApiTag`.
+- **Ingestion.**
+  - `DailyIngestionJob` runs setup → fetch → index → report → cleanup and writes an `ingestion_runs` row per attempt.
+  - Hangfire retries a failed run twice, 5 minutes apart. A retry that is due while the Worker is down runs when it
+    starts again.
+  - PDFs are cached in `%LOCALAPPDATA%/PaperPilot/arxiv_pdfs`. All arXiv traffic shares one 3-second gate
+    (`ArxivRateLimiter`), so a 15-paper run takes about 6 minutes, mostly docling parsing one PDF at a time.
+- **docling-serve** must get `pdf_backend=pypdfium2` (`Docling:PdfBackend`). Its default backend runs words together
+  in headings and text.
+- **Python Docling on Windows** (for fixtures): the Hugging Face cache needs symlinks (Developer Mode), so download
+  the models with `.venv/Scripts/docling-tools models download layout tableformer` and set
+  `DOCLING_ARTIFACTS_PATH=%USERPROFILE%\.cache\docling\models`.
+- **Hangfire.Core** depends on Newtonsoft.Json 11.0.1 (vulnerable, so NU1903 fails the build); `Directory.Packages.props`
+  pins 13.0.4 and `PaperPilot.Ingestion` references it directly.
+- **WireMock priorities:** a mapping without `AtPriority` has priority 0, the highest. Give default stubs a number
+  (e.g. 10) when a test overrides them with `AtPriority(1)`.
+- **`dotnet ef` writes CRLF** migration files. Git stores them as LF (`.gitattributes`); if `git status` shows them
+  modified, run `sed -i 's/\r$//'` on them and re-add.
 - **Known log noise:** at startup the AppHost may log one `crit` from `DcpExecutor` ("Watch task over Kubernetes
   ContainerExec resources terminated unexpectedly", a 1-minute timeout). Resources are unaffected.
 

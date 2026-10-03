@@ -5,8 +5,9 @@ An arXiv CS.AI paper curator built on .NET 10 and Aspire: daily ingestion of new
 
 The design, decisions and roadmap are in [docs/plan/](docs/plan/README.md).
 
-> **Status:** phase 3 (classic RAG). `/api/v1/ask`, `/stream` (server-sent events), `/hybrid-search/`, `/models`,
-> `/feedback` and `/health` work, with an answer cache and tracing; ingestion and agentic RAG come next.
+> **Status:** phase 4 (ingestion). A Hangfire job fetches new cs.AI papers from arXiv every weekday, parses their
+> PDFs with docling-serve and indexes them; `/api/v1/ask`, `/stream`, `/hybrid-search/`, `/models`, `/feedback` and
+> `/health` answer from them. Agentic RAG comes next.
 
 ## Prerequisites
 
@@ -28,7 +29,7 @@ The Aspire dashboard opens at <https://localhost:17205> (the login link is print
 |---|---|
 | API docs | <http://localhost:8100/docs> |
 | Web UI | <http://localhost:8101> |
-| Worker | <http://localhost:8102> |
+| Worker (Hangfire dashboard) | <http://localhost:8102/hangfire> |
 | OpenSearch | <http://localhost:9210> |
 | docling-serve | <http://localhost:5011/docs> |
 
