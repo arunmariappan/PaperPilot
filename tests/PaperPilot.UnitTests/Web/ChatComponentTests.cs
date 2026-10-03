@@ -27,6 +27,9 @@ public sealed class ChatComponentTests : BunitContext
 
     public ChatComponentTests()
     {
+        // bUnit waits 1 s by default. The first WireMock calls of a cold test run can take longer, which once failed
+        // all four tests that wait for an API response.
+        DefaultWaitTimeout = TimeSpan.FromSeconds(10);
         _http = new HttpClient { BaseAddress = new Uri($"{_api.Url}/") };
         Services.AddSingleton(new PaperPilotApiClient(_http));
         Services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
