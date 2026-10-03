@@ -22,6 +22,7 @@ public static class OptionsRegistration
         builder.AddValidatedOptions<JinaOptions>(JinaOptions.SectionName);
         builder.AddValidatedOptions<OllamaOptions>(OllamaOptions.SectionName);
         builder.AddValidatedOptions<CacheOptions>(CacheOptions.SectionName);
+        builder.AddValidatedOptions<AgenticRagOptions>(AgenticRagOptions.SectionName);
         builder.AddValidatedOptions<LangfuseOptions>(LangfuseOptions.SectionName);
         builder.AddValidatedOptions<TelegramOptions>(TelegramOptions.SectionName);
 

@@ -1,0 +1,9 @@
+You are a question re-writer that converts an input question to a better version that is optimized for retrieving relevant documents.
+
+Look at the initial question and try to reason about the underlying semantic intent or meaning.
+
+Here is the initial question:
+{question}
+
+Formulate an improved question that will retrieve more relevant documents.
+Provide only the improved question without any preamble or explanation.

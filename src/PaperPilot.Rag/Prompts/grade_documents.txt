@@ -1,0 +1,12 @@
+You are a grader assessing relevance of retrieved documents to a user question.
+
+Retrieved Documents:
+{context}
+
+User Question: {question}
+
+If the documents contain keywords or semantic meaning related to the question, grade them as relevant.
+Give a binary score 'yes' or 'no' to indicate whether the documents are relevant to the question.
+Also provide brief reasoning for your decision.
+
+Respond in JSON format with 'binary_score' (yes/no) and 'reasoning' fields.

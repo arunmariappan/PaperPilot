@@ -44,6 +44,11 @@ public sealed class OptionsTests
         (ollama.TimeoutSeconds, ollama.Think).ShouldBe((300, false));
         Get<CacheOptions>().TtlHours.ShouldBe(6);
         Get<TelegramOptions>().Enabled.ShouldBeFalse();
+
+        var agentic = Get<AgenticRagOptions>();
+        (agentic.MaxRetrievalAttempts, agentic.GuardrailThreshold).ShouldBe((2, 60));
+        (agentic.GuardrailTemperature, agentic.GradingTemperature, agentic.RewriteTemperature, agentic.GenerateTemperature)
+            .ShouldBe((0f, 0f, 0.3f, 0f));
     }
 
     [Fact]
