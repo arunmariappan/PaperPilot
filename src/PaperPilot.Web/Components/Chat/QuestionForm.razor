@@ -1,0 +1,57 @@
+<form class="question-form" @onsubmit="SubmitAsync" @onsubmit:preventDefault>
+  <label class="question-label" for="question">Your question</label>
+  <textarea id="question" rows="2" maxlength="@ChatSettings.MaxQuestionLength" data-enter-submits
+            placeholder="What are transformers in machine learning?"
+            @bind="Settings.Question" @bind:event="oninput"></textarea>
+
+  <div class="form-row">
+    <fieldset class="mode" disabled="@Busy">
+      <legend>Mode</legend>
+      <label>
+        <input type="radio" name="mode" checked="@(Settings.Mode == ChatMode.Classic)"
+               @onchange="() => Settings.Mode = ChatMode.Classic" />
+        Classic (streaming)
+      </label>
+      <label>
+        <input type="radio" name="mode" checked="@(Settings.Mode == ChatMode.Agentic)"
+               @onchange="() => Settings.Mode = ChatMode.Agentic" />
+        Agentic
+      </label>
+    </fieldset>
+
+    @if (Busy)
+    {
+      <button type="button" class="button stop" @onclick="OnStop">Stop</button>
+    }
+    else
+    {
+      <button type="submit" class="button primary">Ask</button>
+    }
+  </div>
+
+  @if (Message is not null)
+  {
+    <p class="form-message" role="alert">@Message</p>
+  }
+
+  @ChildContent
+</form>
+
+@code {
+  [Parameter, EditorRequired] public ChatSettings Settings { get; set; } = default!;
+
+  /// <summary>A question is being answered: Ask becomes Stop.</summary>
+  [Parameter] public bool Busy { get; set; }
+
+  /// <summary>Shown under the form, e.g. "Please enter a question."</summary>
+  [Parameter] public string? Message { get; set; }
+
+  [Parameter] public EventCallback OnAsk { get; set; }
+
+  [Parameter] public EventCallback OnStop { get; set; }
+
+  [Parameter] public RenderFragment? ChildContent { get; set; }
+
+  // Enter submits too (wwwroot/app.js), also while busy, so it's ignored then.
+  private Task SubmitAsync() => Busy ? Task.CompletedTask : OnAsk.InvokeAsync();
+}

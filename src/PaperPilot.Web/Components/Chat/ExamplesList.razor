@@ -1,0 +1,23 @@
+<section class="examples" aria-labelledby="examples-heading">
+  <h2 id="examples-heading">Examples</h2>
+  <ul>
+    @foreach (var example in ExampleQuestion.All)
+    {
+      <li>
+        <button type="button" class="example" disabled="@Disabled" @onclick="() => OnSelect.InvokeAsync(example)">
+          <span class="example-question">@example.Question</span>
+          <span class="example-settings">
+            top @example.TopK · @(example.UseHybrid ? "hybrid" : "BM25") · @example.Categories
+          </span>
+        </button>
+      </li>
+    }
+  </ul>
+</section>
+
+@code {
+  /// <summary>Fills the form; it doesn't ask.</summary>
+  [Parameter] public EventCallback<ExampleQuestion> OnSelect { get; set; }
+
+  [Parameter] public bool Disabled { get; set; }
+}

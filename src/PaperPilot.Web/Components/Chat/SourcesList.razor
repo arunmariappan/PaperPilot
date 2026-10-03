@@ -1,0 +1,27 @@
+@if (Sources.Count > 0)
+{
+  <section class="sources">
+    <h3>Sources</h3>
+    <ol>
+      @foreach (var source in Sources.Select(SourceLink.FromPdfUrl))
+      {
+        <li>
+          <a href="@source.AbsUrl" target="_blank" rel="noopener noreferrer">arXiv:@source.ArxivId</a>
+          @if (IsWebUrl(source.PdfUrl))
+          {
+            <text> · </text>
+            <a href="@source.PdfUrl" target="_blank" rel="noopener noreferrer">PDF</a>
+          }
+        </li>
+      }
+    </ol>
+  </section>
+}
+
+@code {
+  /// <summary>PDF URLs, as the API returns them.</summary>
+  [Parameter] public IReadOnlyList<string> Sources { get; set; } = [];
+
+  private static bool IsWebUrl(string url) =>
+    url.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || url.StartsWith("http://", StringComparison.OrdinalIgnoreCase);
+}

@@ -1,0 +1,22 @@
+@if (Steps.Count > 0)
+{
+  <section class="reasoning">
+    <h3>Reasoning steps</h3>
+    <ol>
+      @foreach (var step in Steps)
+      {
+        <li>@step</li>
+      }
+    </ol>
+    @if (RetrievalAttempts is { } attempts)
+    {
+      <p class="meta">Retrieval attempts: @attempts</p>
+    }
+  </section>
+}
+
+@code {
+  [Parameter] public IReadOnlyList<string> Steps { get; set; } = [];
+
+  [Parameter] public int? RetrievalAttempts { get; set; }
+}

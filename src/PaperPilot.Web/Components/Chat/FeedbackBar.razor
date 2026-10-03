@@ -1,0 +1,69 @@
+@inject PaperPilotApiClient Api
+
+@if (Turn.TraceId is not null && Available)
+{
+  <div class="feedback">
+    @if (Turn.Feedback is { } score)
+    {
+      <p class="meta">Thanks, your feedback (@(score > 0 ? "👍" : "👎")) was recorded.</p>
+    }
+    else
+    {
+      <span class="feedback-label">Was this helpful?</span>
+      <input type="text" class="feedback-comment" placeholder="Optional comment" maxlength="1000"
+             aria-label="Feedback comment" disabled="@_sending" @bind="_comment" @bind:event="oninput" />
+      <button type="button" class="button icon" title="Helpful" aria-label="Helpful" disabled="@_sending"
+              @onclick="() => SendAsync(1)">👍</button>
+      <button type="button" class="button icon" title="Not helpful" aria-label="Not helpful" disabled="@_sending"
+              @onclick="() => SendAsync(-1)">👎</button>
+      @if (_error is not null)
+      {
+        <p class="error" role="alert">Feedback failed: @_error</p>
+      }
+    }
+  </div>
+}
+
+@code {
+  /// <summary>The answer to rate. Without a trace ID there is nothing to rate.</summary>
+  [Parameter, EditorRequired] public ChatTurn Turn { get; set; } = default!;
+
+  /// <summary>False once the API has said feedback is off (Langfuse disabled).</summary>
+  [Parameter] public bool Available { get; set; } = true;
+
+  [Parameter] public EventCallback OnUnavailable { get; set; }
+
+  private string _comment = string.Empty;
+  private bool _sending;
+  private string? _error;
+
+  private async Task SendAsync(int score)
+  {
+    _sending = true;
+    _error = null;
+    try
+    {
+      var request = new FeedbackRequest
+      {
+        TraceId = Turn.TraceId!,
+        Score = score,
+        Comment = string.IsNullOrWhiteSpace(_comment) ? null : _comment.Trim(),
+      };
+      if (await Api.SubmitFeedbackAsync(request) == FeedbackResult.Unavailable)
+      {
+        await OnUnavailable.InvokeAsync();
+        return;
+      }
+
+      Turn.Feedback = score;
+    }
+    catch (ApiException ex)
+    {
+      _error = ex.Message;
+    }
+    finally
+    {
+      _sending = false;
+    }
+  }
+}

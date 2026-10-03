@@ -1,0 +1,49 @@
+@page "/"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@implements IDisposable
+
+<PageTitle>PaperPilot</PageTitle>
+
+<main class="chat">
+  <header class="intro">
+    <h1>PaperPilot</h1>
+    <p>
+      Ask questions about recent AI and machine-learning papers from arXiv. Answers come from the indexed papers and
+      cite them.
+    </p>
+  </header>
+
+  <QuestionForm Settings="_settings" Busy="Busy" Message="@_formMessage" OnAsk="AskAsync" OnStop="Stop">
+    <AdvancedOptions Settings="_settings" Models="_models" Disabled="Busy" />
+  </QuestionForm>
+
+  @if (_current is null)
+  {
+    <p class="placeholder">Ask a question to get started, or pick an example.</p>
+  }
+  else
+  {
+    <AnswerView @key="_current" Turn="_current" FeedbackAvailable="!_feedbackOff" OnFeedbackUnavailable="FeedbackOff" />
+  }
+
+  <ExamplesList OnSelect="UseExample" Disabled="Busy" />
+
+  @if (_history.Count > 0)
+  {
+    <details class="history">
+      <summary>Earlier answers (@_history.Count)</summary>
+      @foreach (var turn in _history)
+      {
+        <details @key="turn" class="history-item">
+          <summary>@turn.Question</summary>
+          <AnswerView Turn="turn" FeedbackAvailable="!_feedbackOff" OnFeedbackUnavailable="FeedbackOff" />
+        </details>
+      }
+    </details>
+  }
+
+  @if (_feedbackOff)
+  {
+    <p class="meta">Feedback is off because Langfuse tracing is disabled.</p>
+  }
+</main>

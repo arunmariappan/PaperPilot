@@ -1,0 +1,66 @@
+<article class="answer" aria-busy="@(Turn.Status == TurnStatus.Running ? "true" : "false")">
+  <p class="status @Turn.Status.ToString().ToLowerInvariant()" role="status">
+    @if (Turn.Status == TurnStatus.Running)
+    {
+      <span class="spinner" aria-hidden="true"></span>
+    }
+    @StatusText · @Seconds(Turn.Elapsed)
+    @if (Turn.SearchMode is not null)
+    {
+      <span class="meta"> · @Turn.SearchMode search · @Turn.ChunksUsed chunks</span>
+    }
+  </p>
+
+  @if (Turn.HasAnswer)
+  {
+    <div class="markdown">@((MarkupString)_html)</div>
+  }
+
+  @if (Turn.Error is not null)
+  {
+    <p class="error" role="alert"><strong>Error:</strong> @Turn.Error</p>
+  }
+
+  <SourcesList Sources="Turn.Sources" />
+
+  @if (Turn.Mode == ChatMode.Agentic)
+  {
+    <ReasoningSteps Steps="Turn.ReasoningSteps" RetrievalAttempts="Turn.RetrievalAttempts" />
+    <FeedbackBar Turn="Turn" Available="FeedbackAvailable" OnUnavailable="OnFeedbackUnavailable" />
+  }
+</article>
+
+@code {
+  [Parameter, EditorRequired] public ChatTurn Turn { get; set; } = default!;
+
+  [Parameter] public bool FeedbackAvailable { get; set; } = true;
+
+  [Parameter] public EventCallback OnFeedbackUnavailable { get; set; }
+
+  private string? _markdown;
+  private string _html = string.Empty;
+
+  private string StatusText => (Turn.Status, Turn.Mode) switch
+  {
+    (TurnStatus.Running, ChatMode.Agentic) => "Checking the question, searching and grading papers…",
+    (TurnStatus.Running, _) when Turn.HasAnswer => "Writing the answer…",
+    (TurnStatus.Running, _) when Turn.SearchMode is not null => "Waiting for the model…",
+    (TurnStatus.Running, _) => "Searching papers…",
+    (TurnStatus.Answered, _) => "Answered",
+    (TurnStatus.Stopped, _) => "Stopped",
+    _ => "Failed",
+  };
+
+  protected override void OnParametersSet()
+  {
+    // Rendering Markdown on every re-render while streaming is wasteful; only when the text changed.
+    var markdown = Turn.Answer;
+    if (markdown != _markdown)
+    {
+      _markdown = markdown;
+      _html = AnswerMarkdown.ToHtml(markdown);
+    }
+  }
+
+  private static string Seconds(TimeSpan elapsed) => $"{elapsed.TotalSeconds:0} s";
+}

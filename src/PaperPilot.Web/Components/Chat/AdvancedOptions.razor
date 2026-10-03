@@ -1,0 +1,44 @@
+<details class="advanced">
+  <summary>Advanced options</summary>
+  <fieldset disabled="@Disabled">
+    <div class="option">
+      <label for="top-k">Number of chunks to retrieve: <output for="top-k">@Settings.TopK</output></label>
+      <input id="top-k" type="range" min="1" max="10" step="1" @bind="Settings.TopK" @bind:event="oninput" />
+      <small>More chunks = more context but slower generation.</small>
+    </div>
+
+    <div class="option">
+      <label class="checkbox">
+        <input type="checkbox" @bind="Settings.UseHybrid" />
+        Use hybrid search (BM25 + vector embeddings)
+      </label>
+      <small>Usually better results than keyword-only search.</small>
+    </div>
+
+    <div class="option">
+      <label for="model">LLM model</label>
+      <select id="model" @bind="Settings.Model">
+        @foreach (var model in Models.Models)
+        {
+          <option value="@model">@ModelChoices.Label(model)</option>
+        }
+      </select>
+      <small>Larger models may give better answers but are slower.</small>
+    </div>
+
+    <div class="option">
+      <label for="categories">arXiv categories (optional)</label>
+      <input id="categories" type="text" placeholder="cs.AI, cs.LG, cs.CL"
+             @bind="Settings.Categories" @bind:event="oninput" />
+      <small>Comma-separated. Leave empty for all categories.</small>
+    </div>
+  </fieldset>
+</details>
+
+@code {
+  [Parameter, EditorRequired] public ChatSettings Settings { get; set; } = default!;
+
+  [Parameter, EditorRequired] public ModelChoices Models { get; set; } = default!;
+
+  [Parameter] public bool Disabled { get; set; }
+}
