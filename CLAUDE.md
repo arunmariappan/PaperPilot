@@ -109,6 +109,25 @@ ServiceDefaults ← every host
   - In Langfuse the chat span is a generation with token usage. `rag_request` points at the ASP.NET span as its parent,
     which Langfuse never gets.
   - To query Langfuse, read the keys from the AppHost user secrets inside a script; never print them.
+- **Agent Framework workflows (plan R4, `Microsoft.Agents.AI.Workflows` 1.23).**
+  - A node is an `Executor<TIn, TOut>` overriding `ValueTask<TOut> HandleAsync(TIn, IWorkflowContext, CancellationToken)`;
+    the return value goes along the node's outgoing edges. A terminal node is an `Executor<TIn>` that calls
+    `context.YieldOutputAsync(value)`. It needs `[YieldsOutput(typeof(T))]` (otherwise: "Cannot output object of type
+    T. Expecting one of []") and must be listed in `WorkflowBuilder.WithOutputFrom(...)`.
+  - Conditional edges: `AddEdge<T>(from, to, predicate)`. Every edge whose predicate is true gets the message; if
+    none is, the run goes idle without output. A loop is just an edge back to an earlier node.
+  - Run with `InProcessExecution.Concurrent.RunAsync(workflow, input, cancellationToken: ct)` and read
+    `run.OutgoingEvents` (`WorkflowOutputEvent.Is<T>(out var value)`). One built `Workflow` serves concurrent runs only
+    in the `Concurrent` environment and only if every executor passes `declareCrossRunShareable: true`; the default
+    environment throws "already owned by another runner".
+  - A handler exception doesn't make `RunAsync` throw: the run emits `ExecutorFailedEvent` (`Data` is the original
+    exception) and `WorkflowErrorEvent`, then ends without output.
+  - Cancellation reaches the handlers, but `RunAsync` returns normally (status `Running`, no output) and `DisposeAsync`
+    waits for the handler to stop. Check the token after the run.
+  - `Activity.Current` inside a handler is the caller's span, so node spans nest under the request span. The
+    framework's own spans are off unless `WithOpenTelemetry()` is called; they add `workflow.build`,
+    `workflow.session`, `workflow_invoke`, `executor.process {id}`, `message.send` and `edge_group.process` (source
+    `Microsoft.Agents.AI.Workflows`), several per node, so PaperPilot leaves them off.
 - **Activities in async iterators:** `Activity.Current` resets at every `yield`, so spans started after one lose their
   parent. `RagService.StreamAsync` runs the pipeline in a normal async method that writes to a channel.
 - **WireMock** adds a request to `LogEntries` only after the client already has the response, so assert on it after
