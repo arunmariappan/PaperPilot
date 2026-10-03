@@ -21,7 +21,7 @@ public static class RagTelemetry
     /// <summary>
     /// Starts the root span of a RAG request and sets the Langfuse trace fields: name, user, session and input.
     /// </summary>
-    internal static Activity? StartRequest(string name, string query, string userId = ApiUser)
+    public static Activity? StartRequest(string name, string query, string userId = ApiUser)
     {
         var activity = Source.StartActivity(name);
         activity?.SetTag(LangfuseAttributes.TraceName, name);
@@ -37,7 +37,7 @@ public static class RagTelemetry
         activity.SetTraceOutput(new { Answer = answer, TotalDurationSeconds = Math.Round(duration.TotalSeconds, 3), ResponseLength = answer.Length });
 
     /// <summary>Sets an output on the span and on its trace.</summary>
-    internal static void SetTraceOutput(this Activity? activity, object payload)
+    public static void SetTraceOutput(this Activity? activity, object payload)
     {
         activity.SetOutput(payload);
         activity?.SetJsonTag(LangfuseAttributes.TraceOutput, payload);
@@ -94,7 +94,7 @@ public static class RagTelemetry
     }
 
     /// <summary>Marks the span as failed and records the exception.</summary>
-    internal static void Fail(this Activity? activity, Exception exception)
+    public static void Fail(this Activity? activity, Exception exception)
     {
         activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
         activity?.AddException(exception);

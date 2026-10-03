@@ -37,12 +37,18 @@ public sealed partial class RagService(
 
     private const string RequestSpanName = "rag_request";
 
-    public async Task<AskResponse> AskAsync(AskRequest request, CancellationToken cancellationToken = default)
+    public Task<AskResponse> AskAsync(AskRequest request, CancellationToken cancellationToken = default) =>
+        AskAsync(request, RagTelemetry.ApiUser, cancellationToken);
+
+    /// <param name="request">The question and retrieval settings.</param>
+    /// <param name="userId">The user the trace is recorded for, e.g. <c>telegram:{chatId}</c>.</param>
+    /// <param name="cancellationToken">Stops retrieval and generation.</param>
+    public async Task<AskResponse> AskAsync(AskRequest request, string userId, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         var model = chatOptions.ResolveModel(request.Model);
-        using var activity = RagTelemetry.StartRequest(RequestSpanName, request.Query);
+        using var activity = RagTelemetry.StartRequest(RequestSpanName, request.Query, userId);
         var started = time.GetTimestamp();
 
         try

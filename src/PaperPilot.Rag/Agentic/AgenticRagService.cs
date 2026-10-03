@@ -15,7 +15,14 @@ public interface IAgenticRagService
     /// search outage ends with an explicit answer, so this only throws for unexpected errors.
     /// </summary>
     /// <exception cref="ArgumentException">The query is blank.</exception>
-    Task<AgenticAskResponse> AskAsync(AskRequest request, CancellationToken cancellationToken = default);
+    Task<AgenticAskResponse> AskAsync(AskRequest request, CancellationToken cancellationToken = default) =>
+        AskAsync(request, RagTelemetry.ApiUser, cancellationToken);
+
+    /// <inheritdoc cref="AskAsync(AskRequest, CancellationToken)"/>
+    /// <param name="request">The question and retrieval settings.</param>
+    /// <param name="userId">The user the trace is recorded for, e.g. <c>telegram:{chatId}</c>.</param>
+    /// <param name="cancellationToken">Stops the run.</param>
+    Task<AgenticAskResponse> AskAsync(AskRequest request, string userId, CancellationToken cancellationToken = default);
 }
 
 internal sealed partial class AgenticRagService(
@@ -27,7 +34,7 @@ internal sealed partial class AgenticRagService(
 {
     private const string RequestSpanName = "agentic_rag_request";
 
-    public async Task<AgenticAskResponse> AskAsync(AskRequest request, CancellationToken cancellationToken = default)
+    public async Task<AgenticAskResponse> AskAsync(AskRequest request, string userId, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         if (string.IsNullOrWhiteSpace(request.Query))
@@ -36,7 +43,7 @@ internal sealed partial class AgenticRagService(
         }
 
         var model = chatOptions.ResolveModel(request.Model);
-        using var activity = RagTelemetry.StartRequest(RequestSpanName, request.Query);
+        using var activity = RagTelemetry.StartRequest(RequestSpanName, request.Query, userId);
         (string, object?)[] metadata =
         [
             ("env", environment.EnvironmentName.ToLowerInvariant()),
