@@ -48,7 +48,6 @@ internal static class TelegramMessageFormatter
 
     private const int MaxSources = 5;
     private const int MaxPapers = 5;
-    private const string PdfUrlPrefix = "https://arxiv.org/pdf/";
 
     /// <summary>
     /// <c>*Answer:*</c>, the answer, then up to five sources as abstract-page links. The text is legacy Markdown.
@@ -154,16 +153,5 @@ internal static class TelegramMessageFormatter
     }
 
     /// <summary>The abstract page for a source from <see cref="ArxivId.ToPdfUrl"/>.</summary>
-    internal static string AbsUrl(string pdfUrl)
-    {
-        var id = pdfUrl.StartsWith(PdfUrlPrefix, StringComparison.Ordinal)
-            ? pdfUrl[PdfUrlPrefix.Length..]
-            : pdfUrl[(pdfUrl.LastIndexOf('/') + 1)..];
-        if (id.EndsWith(".pdf", StringComparison.Ordinal))
-        {
-            id = id[..^".pdf".Length];
-        }
-
-        return ArxivId.ToAbsUrl(id);
-    }
+    internal static string AbsUrl(string pdfUrl) => ArxivId.ToAbsUrl(ArxivId.FromPdfUrl(pdfUrl));
 }

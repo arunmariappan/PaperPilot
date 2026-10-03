@@ -27,4 +27,12 @@ public sealed class ArxivIdTests
     [InlineData("solv-int/9901001", "https://arxiv.org/abs/solv-int/9901001")]
     public void ToAbsUrl_builds_the_unversioned_abstract_url(string arxivId, string expected) =>
         ArxivId.ToAbsUrl(arxivId).ShouldBe(expected);
+
+    [Theory]
+    [InlineData("https://arxiv.org/pdf/2510.01234.pdf", "2510.01234")]
+    [InlineData("https://arxiv.org/pdf/cs/0112017.pdf", "cs/0112017")] // Python's split("/") kept only "0112017" (B8)
+    [InlineData("https://example.org/papers/2510.01234v2.pdf", "2510.01234v2")]
+    [InlineData("https://example.org/papers/2510.01234", "2510.01234")]
+    public void FromPdfUrl_reads_the_id_back(string pdfUrl, string expected) =>
+        ArxivId.FromPdfUrl(pdfUrl).ShouldBe(expected);
 }
