@@ -60,7 +60,7 @@ From `services/telegram/bot.py` (copy all user-facing text verbatim):
 - [x] No integration test against real Telegram. Check it manually. **As built:** a unit test runs the real polling loop against a fake Bot API (WireMock); see As built.
 
 ## Done when
-- [ ] With the token set in AppHost secrets, `/start`, `/help`, `/search transformers` and a free-text question all work from your phone.
-- [ ] A question whose answer exceeds 4,096 characters arrives in several messages.
+- [x] With the token set in AppHost secrets, `/start`, `/help`, `/search transformers` and a free-text question all work from your phone. *Checked 2026-10-03* with @PaperPilot_arXiv_bot. A `/help` sent while the API was down was answered once it came back, so pending updates are kept.
+- [x] A question whose answer exceeds 4,096 characters arrives in several messages. *Covered by unit tests only:* `qwen3.5:9b` answers stayed around 1,500 characters, so no live answer reached the limit. The split (paragraph, then line, then hard cut) and the per-part Markdown fallback are tested in `TelegramMessageFormatterTests` and `TelegramUpdateHandlerTests`.
 - [x] With no token, the API starts normally and logs that the bot was skipped. *Checked 2026-10-03:* "Telegram bot not configured - skipping initialization" in the `api` log.
-- [ ] Telegram questions show up as `rag_request` traces (user `telegram:{chatId}`) in the Aspire dashboard.
+- [x] Telegram questions show up as `rag_request` traces (user `telegram:{chatId}`) in the Aspire dashboard. *Checked 2026-10-03:* a phone question produced a 45.9 s `rag_request` with `langfuse.user.id` `telegram:{chatId}`; HTTP client spans show `/bot{token}/`, never the token.
