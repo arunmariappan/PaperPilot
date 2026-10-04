@@ -43,10 +43,12 @@ var docling = builder.AddContainer("docling", "docling-project/docling-serve-cpu
 
 // The Windows host Ollama by default ("Endpoint=http://localhost:11434" in appsettings.json).
 // Set Ollama:UseContainer=true to run Ollama in Docker instead (CPU only, pulls the model on first start).
+// Ollama:Model is passed on to the API, which otherwise uses its own default.
+var ollamaModel = builder.Configuration["Ollama:Model"] ?? "qwen3.5:9b";
 IResourceBuilder<IResourceWithConnectionString> ollama = builder.Configuration.GetValue("Ollama:UseContainer", false)
     ? builder.AddOllama("ollama-container")
         .WithDataVolume("paperpilot-ollama-data")
-        .AddModel("ollama", builder.Configuration["Ollama:Model"] ?? "qwen3.5:9b")
+        .AddModel("ollama", ollamaModel)
     : builder.AddConnectionString("ollama");
 
 var migrations = builder.AddProject<Projects.PaperPilot_MigrationService>("migrations")
@@ -57,6 +59,7 @@ var api = builder.AddProject<Projects.PaperPilot_Api>("api")
     .WithReference(papersDb)
     .WithReference(redis)
     .WithReference(ollama)
+    .WithEnvironment("Ollama__Model", ollamaModel)
     .WithEnvironment("OpenSearch__Host", opensearch.GetEndpoint("http"))
     .WithEnvironment("Jina__ApiKey", jinaKey)
     .WithHttpHealthCheck("/health")
